@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 const { MongoClient } = require("mongodb");
+const Response = require('../Tools/Response')
+
+//local testing uri
 const uri =
-  "mongodb+srv://admin:admin@yblog.thdiw8i.mongodb.net/?retryWrites=true&w=majority";
+  "mongodb://0.0.0.0:27017/blogPost";
+  
 const blogModel = require("../models/blogPost");
 
 mongoose.connect(uri, {
@@ -14,6 +18,18 @@ const db = mongoose.connection;
 db.on("error", (err) => console.error(err.message));
 db.once("connected", () => console.log("Connected to db"));
 
+// CONSTANTS
+const SUCCESS_POST = "Successfully inserted";
+const SUCCESS_PATCH = "Successfully updated";
+const SUCCESS_DELETE = "Successfully deleted";
+const SUCCESS_GET = "Successfully retrieved";
+
+const FAIL_POST = "Failed to insert";
+const FAIL_PATCH = "Failed to update";
+const FAIL_DELETE = "Failed to delete";
+const FAIL_GET = "Failed to retrieve";
+
+
 const postComment = async (author, postID, text) => {
   try {
     const updatedPost = await blogModel.findByIdAndUpdate(
@@ -24,10 +40,10 @@ const postComment = async (author, postID, text) => {
       { new: true }
     );
 
-    return updatedPost;
+    //don't necessarily need updated post returned unless we want specifics
+    return new Response(200, SUCCESS_POST, updatedPost);
   } catch (e) {
-    console.log(e);
-    return {};
+    return new Response(500, FAIL_POST, e);
   }
 };
 
@@ -38,3 +54,5 @@ const createPost = async(author,content,title) =>{
         author,
       });
 }
+
+module.exports = {postComment, createPost}
