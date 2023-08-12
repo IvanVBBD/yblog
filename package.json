@@ -1,0 +1,25 @@
+{
+  "name": "yblog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ivy7493/yblog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ivy7493/yblog/issues"
+  },
+  "homepage": "https://github.com/Ivy7493/yblog#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-swagger-generator": "^1.1.17",
+    "files": "^2.2.2",
+    "mongoose": "^7.4.3"
+  }
+}
