@@ -5,7 +5,7 @@ const Response = require('../Tools/Response')
 //local testing uri
 const uri =
   "mongodb://0.0.0.0:27017/blogPost";
-  
+
 const blogModel = require("../models/blogPost");
 
 mongoose.connect(uri, {
@@ -48,11 +48,16 @@ const postComment = async (author, postID, text) => {
 };
 
 const createPost = async(author,content,title) =>{
-    const newPost = await blogModel.create({
+    try {
+      const newPost = await blogModel.create({
         title,
         content,
         author,
       });
+      return new Response(200, SUCCESS_POST, newPost)
+    } catch (error) {
+      return new Response(500, FAIL_POST, error)
+    }
 }
 
 module.exports = {postComment, createPost}

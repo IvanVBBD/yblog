@@ -1,6 +1,16 @@
 const express = require("express");
 const blogController = require("../Controllers/blogController");
 const blogRouter = express.Router();
+const bodyParser = require('body-parser')
+
+//body parser configs
+blogRouter.use(bodyParser.json());
+blogRouter.use(bodyParser.urlencoded({
+  extended: true 
+}));
+const urlencodedParser = bodyParser.urlencoded({
+  extended: false 
+});
 
 //Outcomes
 const OK = 200;
@@ -18,17 +28,24 @@ blogRouter.get("/:author", async (req, res) => {
   }
 });
 
-blogRouter.post('/', async (req, res) => {
+blogRouter.post('/post', urlencodedParser, async (req, res) => {
+    console.log(req.body)
     const { title, content, author } = req.body;
   
     try {
-      const newPost = await BlogPost.create({
-        title,
-        content,
-        author,
-      });
-  
-      res.status(201).json(newPost);
+      //Response object
+      const createdPost = await blogController.createPost(author, content, title);
+      
+      if(createdPost.status == OK){
+        //can send data back from response object if we need to
+        res.status(OK).send(createdPost.message);
+      }
+      else if(createdPost.status == ERR){
+        res.status(ERR).send(createdPost.message);
+      }
+      else{
+        res.status(DENIED).send("Sorry Neh, you failed to can")
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error creating post' });

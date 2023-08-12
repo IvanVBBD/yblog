@@ -1,8 +1,0 @@
-POST http://localhost:3000/posts/comment
-Content-Type: application/json
-
-{
-  "text":"Test",
-  "author":"Test",
-  "postId":"Test"
-}

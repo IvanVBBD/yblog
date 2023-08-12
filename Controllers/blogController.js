@@ -12,4 +12,13 @@ const postComment = async (author,postID,text) => {
   }
 }
 
-module.exports = {postComment}
+const createPost = async (author,postID,text) => {
+  try {
+    const response = await db.createPost(author,postID,text);
+    return response;
+  } catch (error) {
+    return new Response(500, ERR, error) 
+  }
+}
+
+module.exports = {postComment, createPost}
