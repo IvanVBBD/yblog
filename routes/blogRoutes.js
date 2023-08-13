@@ -16,6 +16,7 @@ const urlencodedParser = bodyParser.urlencoded({
 const OK = 200;
 const ERR = 500;
 const DENIED = 403;
+const BATCH = 10;
 
 blogRouter.post('/', urlencodedParser, async (req, res) => {
     const { title, content, author } = req.body;
@@ -68,8 +69,9 @@ blogRouter.post('/comment', urlencodedParser, async (req, res) => {
   // Get a user's blog posts with comments
 blogRouter.get('/', urlencodedParser, async (req, res) => {
   const author = req.query.author;
+  const reqCount = req.query.reqCount;
   try {
-    const posts = await blogController.getPostsForAuthors(author);
+    const posts = await blogController.getPostsForAuthors(author, reqCount, BATCH);
     res.json(posts);
   } catch (error) {
     console.error(error);
@@ -79,10 +81,9 @@ blogRouter.get('/', urlencodedParser, async (req, res) => {
 
 blogRouter.get('/latest', urlencodedParser, async (req, res) => {
   const reqCount = req.query.reqCount;
-  const count = req.query.count;
 
   try {
-    const posts = await blogController.getLatestFeed(reqCount, count);
+    const posts = await blogController.getLatestFeed(reqCount, BATCH);
     res.json(posts);
   } catch (error) {
     console.error(error);

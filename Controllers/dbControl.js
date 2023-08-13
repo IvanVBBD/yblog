@@ -64,24 +64,24 @@ const createPost = async (author, content, title, time, postID) => {
   }
 };
 
-const getAuthorPosts = async (author) => {
+const getAuthorPosts = async (author, reqCount, batch) => {
   try {
-    const posts = await blogModel.find({ author }).sort('-createdAt').limit();
+    const posts = await blogModel.find({ author: author }).skip(reqCount).sort('-createdAt').limit(batch);
     return new Response(200, SUCCESS_GET, posts);
   } catch (error) {
     return new Response(500, FAIL_POST, error);
   }
 };
 
-const getLatestPosts = async (reqCount, count) => {
+const getLatestPosts = async (reqCount, batch) => {
   try {
     // skipping to choose those not yet fetched, without it gets the same 10 posts
-    const skip = (reqCount-1)*count;
+    const skip = (reqCount-1)*batch;
     const latestPosts = await blogModel
       .find()
       .skip(skip)
       .sort({ createdAt: -1 }) // Sort by createdAt in descending order to get the latest posts
-      .limit(count) // Limit the number of results to the specified count
+      .limit(batch) // Limit the number of results to the specified count
       .exec();
 
     return new Response(200, SUCCESS_GET, latestPosts);

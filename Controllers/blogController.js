@@ -26,9 +26,9 @@ const createPost = async (author,content,title,time) => {
   }
 }
 
-const getPostsForAuthors = async (author) => {
+const getPostsForAuthors = async (author, reqCount, batch) => {
   try {
-    const response = await db.getAuthorPosts(author);
+    const response = await db.getAuthorPosts(author, reqCount, batch);
     return response;
   } catch (error) {
     console.log(error);
@@ -36,9 +36,9 @@ const getPostsForAuthors = async (author) => {
   }
 }
 
-const getLatestFeed = async (reqCount, count) => {
+const getLatestFeed = async (reqCount, batch) => {
   try {
-    const response = await db.getLatestPosts(reqCount, count);
+    const response = await db.getLatestPosts(reqCount, batch);
     return response;
   } catch (error) {
     console.log(error);
