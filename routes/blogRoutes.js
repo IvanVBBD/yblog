@@ -72,7 +72,17 @@ blogRouter.get('/', urlencodedParser, async (req, res) => {
   const reqCount = req.query.reqCount;
   try {
     const posts = await blogController.getPostsForAuthors(author, reqCount, BATCH);
-    res.json(posts);
+    if(posts.status == OK){
+      //can send data back from response object if we need to
+      res.status(OK).json(posts.data);
+    }
+    else if(posts.status == ERR){
+      res.status(ERR).send({message:posts.message});
+    }
+    else{
+      res.status(DENIED).json({message:"Sorry Neh, you failed to can"})
+    }
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error fetching user posts' });
@@ -84,7 +94,16 @@ blogRouter.get('/latest', urlencodedParser, async (req, res) => {
 
   try {
     const posts = await blogController.getLatestFeed(reqCount, BATCH);
-    res.json(posts);
+    if(posts.status == OK){
+      //can send data back from response object if we need to
+      res.status(OK).json(posts.data);
+    }
+    else if(posts.status == ERR){
+      res.status(ERR).send({message:posts.message});
+    }
+    else{
+      res.status(DENIED).json({message:"Sorry Neh, you failed to can"})
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error fetching user posts' });

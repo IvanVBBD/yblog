@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const Response = require('../Tools/Response')
 
 const ERR = 'There was an issue, please try again later'
-const BATCH_SIZE = 10;
 
 const postComment = async (author,text,postID) => {
   try {
