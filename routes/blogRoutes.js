@@ -77,7 +77,7 @@ blogRouter.get('/', urlencodedParser, async (req, res) => {
   }
 });
 
-blogRouter.get('/lastest', urlencodedParser, async (req, res) => {
+blogRouter.get('/latest', urlencodedParser, async (req, res) => {
   const count = req.query.count;
   try {
     const posts = await blogController.getLatestFeed(count);
