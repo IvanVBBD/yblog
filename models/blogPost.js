@@ -21,6 +21,10 @@ const blogPostSchema = new mongoose.Schema({
       type: Date, 
       default: Date.now 
     },
+    postID : {
+      type : String,
+      required : true
+    },
     comments: [
       {
         text: String,
@@ -30,6 +34,6 @@ const blogPostSchema = new mongoose.Schema({
     ],
   });
 
-  module.exports = mongoose.model("blogPost",blogPostSchema);
+  module.exports = mongoose.model("blogPost",blogPostSchema,"Posts");
 
 
