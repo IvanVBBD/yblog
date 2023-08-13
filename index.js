@@ -1,6 +1,7 @@
 const express = require("express");
 const expressSwaggerGenerator = require('express-swagger-generator');
 const blogRouter = require("./routes/blogRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const port = process.env.PORT || 3000;
 
@@ -9,6 +10,7 @@ const app = express();
 // expressSwagger(require('./swagger.json'), '/swagger');
 
 app.use("/posts", blogRouter);
+app.use("/user", userRouter);
 
 app.listen(port, async () => {
     console.log("server is running!");

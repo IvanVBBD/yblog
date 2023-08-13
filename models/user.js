@@ -4,12 +4,13 @@ const userSchema = new mongoose.Schema({
   author:{
     type:String,
     min: 5,
-    required: true
+    required: true,
+    unique: true
   },
   memeberSince:{
-    type: Date,
-    default: Date.now
+    type: String,
+    default: new Date().toLocaleDateString()
   }
 })
 
-module.exports = mongoose.Schema("user", userSchema)
+module.exports = mongoose.model("user", userSchema)

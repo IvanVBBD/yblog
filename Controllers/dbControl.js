@@ -8,6 +8,7 @@ const hostedURI =
   "mongodb+srv://admin:admin@yblog.thdiw8i.mongodb.net/?retryWrites=true&w=majority";
 
 const blogModel = require("../models/blogPost");
+const userModel = require("../models/user");
 
 mongoose.connect(hostedURI, {
   useNewUrlParser: true,
@@ -91,4 +92,17 @@ const getLatestPosts = async (reqCount, batch) => {
   }
 };
 
-module.exports = { postComment, createPost, getAuthorPosts, getLatestPosts };
+const createUser = async(author, TMSTAMP) => {
+  try {
+    const user = await userModel.create({
+      author,
+      TMSTAMP
+    })
+
+    return new Response(200, SUCCESS_POST, user)
+  } catch (error) {
+    return new Response(500, FAIL_POST, error)
+  }
+}
+
+module.exports = { postComment, createPost, getAuthorPosts, getLatestPosts, createUser };
