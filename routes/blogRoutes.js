@@ -78,9 +78,11 @@ blogRouter.get('/', urlencodedParser, async (req, res) => {
 });
 
 blogRouter.get('/latest', urlencodedParser, async (req, res) => {
+  const reqCount = req.query.reqCount;
   const count = req.query.count;
+
   try {
-    const posts = await blogController.getLatestFeed(count);
+    const posts = await blogController.getLatestFeed(reqCount, count);
     res.json(posts);
   } catch (error) {
     console.error(error);

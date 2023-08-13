@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const Response = require('../Tools/Response')
 
 const ERR = 'There was an issue, please try again later'
+const BATCH_SIZE = 10;
 
 const postComment = async (author,text,postID) => {
   try {
@@ -35,9 +36,9 @@ const getPostsForAuthors = async (author) => {
   }
 }
 
-const getLatestFeed = async (count) => {
+const getLatestFeed = async (reqCount, count) => {
   try {
-    const response = await db.getLatestPosts(count);
+    const response = await db.getLatestPosts(reqCount, count);
     return response;
   } catch (error) {
     console.log(error);
