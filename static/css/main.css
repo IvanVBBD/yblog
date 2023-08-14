@@ -38,7 +38,7 @@ body {
   grid-template-areas: "aside main";
 }
 
-.button{
+.button {
   background-color: var(--primary-color);
   padding: 0;
   color: var(--light-color);
@@ -48,12 +48,12 @@ body {
   font-weight: bold;
 }
 
-.button:hover{
+.button:hover {
   background-color: var(--primary-color-hover);
   cursor: pointer;
 }
 
-aside{
+aside {
   height: 100%;
   padding: 1rem;
 }
@@ -82,8 +82,8 @@ aside ul li:hover {
   cursor: pointer;
 }
 aside ul li a.selected {
-    font-weight: 1000;
-  }
+  font-weight: 1000;
+}
 
 aside ul li img {
   object-fit: contain;
@@ -93,7 +93,10 @@ aside ul li img {
 
 aside ul li.postItem {
   justify-content: center;
-  font-weight: 100;
+  background-color: var(--primary-color);
+  padding: 0;
+  color: var(--light-color);
+  border-radius: 1.5em;
 }
 
 a:hover {
@@ -119,4 +122,76 @@ a:hover {
   align-self: center;
   margin: auto;
   animation: spin 1s infinite linear;
+}
+
+@media (max-width: 1000px) {
+  h1 {
+    text-align: center;
+  }
+  aside {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  aside a {
+    display: none;
+  }
+
+  body {
+    grid-template-columns: 10vw 60vw;
+  }
+
+  aside ul li {
+    justify-content: center;
+  }
+  aside ul li.postItem {
+    min-width: 45px;
+  }
+  aside ul li img {
+    padding: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  body {
+    grid-template-rows: 90vh 10vh;
+    grid-template-columns: 100vw;
+    grid-template-areas: "aside main";
+  }
+
+  main {
+    grid-column-start: 1;
+    grid-row-start: 1;
+  }
+
+  aside .nav-logo{
+    display: none;
+  }
+
+  aside {
+    margin: 0;
+    padding: 0;
+    grid-column-start: 1;
+    grid-row-start: 2;
+    align-self: center;
+
+  }
+  
+  aside ul{
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-around;
+  }
+
+  aside img{
+    height: 3rem;
+  }
+  aside ul li {
+    display: inline-block;
+  }
+
+  aside ul li.postItem {
+    background-color: transparent;
+  }
 }
