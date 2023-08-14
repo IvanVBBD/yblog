@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css?family=Lato");
+:root {
+  --primary-color: #1d9bf0;
+  --primary-color-hover: #1a8cd8;
+  --light-color: #eff3f4;
+  --light-color-hover: #d9ddde;
+  --dark-color: #000000;
+  --dark-color-hover: #131313;
+  --dark-accent-color: #16181c;
+  --dark-accent-color-hover: #1d1f23;
+  --main-font: "Lato", "Arial", sans-serif;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  font-family: var(--main-font);
+  color: var(--light-color);
+  background-color: var(--dark-color);
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 20vw 40vw;
+  grid-template-areas: "aside main";
+}
+
+main {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.posts {
+  background-color: var(--dark-accent-color);
+  border-radius: 1rem 1rem 0 0;
+  height: 100vh;
+}
+
+aside img {
+  height: 4rem;
+}
+
+aside ul {
+  list-style: none;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+aside ul li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5rem;
+  text-align: center;
+  height: 3rem;
+  margin: 0.5rem 0 0.5rem 0;
+}
+aside ul li:hover {
+  background-color: var(--dark-color-hover);
+  cursor: pointer;
+}
+
+aside ul li img {
+  object-fit: contain;
+  padding: 1rem;
+  max-width: 2rem;
+}
+aside ul li.postItem {
+  background-color: var(--primary-color);
+  justify-content: center;
+}
+
+aside ul li.postItem:hover {
+  background-color: var(--primary-color-hover);
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+/* LOADING SCREEN */
+#loading-screen {
+  display: none;
+  background: var(--dark-color-hover);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#loading-screen.display {
+  display: flex;
+  align-self: center;
+}
+
+#loading-screen img {
+  width: 20%;
+  display: flex;
+  align-self: center;
+  margin: auto;
+  animation: spin 1s infinite linear;
+}
