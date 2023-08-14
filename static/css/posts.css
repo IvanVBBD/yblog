@@ -1,0 +1,116 @@
+@import "./main.css";
+
+main {
+  height: 100%;
+  margin: 0 1rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-heading {
+  height: 5vh;
+}
+
+main .posts {
+  height: 90vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Chrome, Safari and Opera */
+.posts::-webkit-scrollbar {
+  display: none;
+}
+
+.post {
+  background-color: var(--dark-accent-color);
+  border-radius: 1rem;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 20% 50% 30%;
+  grid-template-rows: auto;
+  margin: 0 0 1rem 0;
+}
+
+.icon {
+  object-fit: contain;
+  padding: 1rem;
+  max-width: 4rem;
+  border-radius: 50%;
+
+  grid-column-start: 1;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.display-name {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  padding: 0 0 0 1rem;
+  margin: 0;
+  height: fit-content;
+  place-self: end stretch;
+}
+
+.username {
+  grid-column-start: 2;
+  grid-row-start: 2;
+  padding: 0 0 0 1rem;
+  margin: 0;
+  height: fit-content;
+  place-self: start stretch;
+  color: var(--light-color-hover);
+}
+
+.follow-button {
+  grid-column-start: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  width: 80%;
+  height: 2rem;
+  justify-self: center;
+  place-self: center stretch;
+}
+
+.blog-text {
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 3;
+
+  padding: 0 1rem 0 1rem;
+  text-align: justify;
+  margin: 0;
+}
+
+.date-stamp {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 4;
+
+  padding: 1rem;
+  margin: 0;
+  color: var(--light-color-hover);
+  font-style: italic;
+}
+
+.like-text {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 5;
+
+  padding: 0 0 1rem 1rem;
+  margin: 0;
+}
+
+.like-button {
+  grid-column-start: 3;
+  grid-row-start: 4;
+  grid-row-end: 6;
+
+  width: 80%;
+  height: 2rem;
+  justify-self: center;
+  place-self: center stretch;
+}

@@ -3,7 +3,7 @@
   --primary-color: #1d9bf0;
   --primary-color-hover: #1a8cd8;
   --light-color: #eff3f4;
-  --light-color-hover: #d9ddde;
+  --light-color-hover: #b9bdbe;
   --dark-color: #000000;
   --dark-color-hover: #131313;
   --dark-accent-color: #16181c;
@@ -17,6 +17,9 @@ html {
   font-family: var(--main-font);
   color: var(--light-color);
   background-color: var(--dark-color);
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
@@ -28,21 +31,31 @@ html::-webkit-scrollbar {
 
 body {
   display: grid;
+  padding: 0;
+  margin: 0;
   justify-content: center;
   grid-template-columns: 20vw 40vw;
   grid-template-areas: "aside main";
 }
 
-main {
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
+.button{
+  background-color: var(--primary-color);
+  padding: 0;
+  color: var(--light-color);
+  border-radius: 1.5em;
+  border-style: none;
+  font-family: inherit;
+  font-weight: bold;
 }
 
-.posts {
-  background-color: var(--dark-accent-color);
-  border-radius: 1rem 1rem 0 0;
-  height: 100vh;
+.button:hover{
+  background-color: var(--primary-color-hover);
+  cursor: pointer;
+}
+
+aside{
+  height: 100%;
+  padding: 1rem;
 }
 
 aside img {
@@ -68,19 +81,19 @@ aside ul li:hover {
   background-color: var(--dark-color-hover);
   cursor: pointer;
 }
+aside ul li a.selected {
+    font-weight: 1000;
+  }
 
 aside ul li img {
   object-fit: contain;
   padding: 1rem;
   max-width: 2rem;
 }
-aside ul li.postItem {
-  background-color: var(--primary-color);
-  justify-content: center;
-}
 
-aside ul li.postItem:hover {
-  background-color: var(--primary-color-hover);
+aside ul li.postItem {
+  justify-content: center;
+  font-weight: 100;
 }
 
 a:hover {
