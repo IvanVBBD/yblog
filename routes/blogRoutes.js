@@ -1,30 +1,41 @@
 const express = require("express");
 const blogController = require("../Controllers/blogController");
 const blogRouter = express.Router();
+const bodyParser = require('body-parser')
 
-blogRouter.get("/:author", async (req, res) => {
-  const author = req.params.author;
-
-  try {
-    const posts = await BlogPost.find({ author }).sort("-createdAt");
-    res.json(posts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error fetching user posts" });
-  }
+//body parser configs
+blogRouter.use(bodyParser.json());
+blogRouter.use(bodyParser.urlencoded({
+  extended: true 
+}));
+const urlencodedParser = bodyParser.urlencoded({
+  extended: false 
 });
 
-blogRouter.post('/', async (req, res) => {
+//Outcomes
+const OK = 200;
+const ERR = 500;
+const DENIED = 403;
+const BATCH = 10;
+
+blogRouter.post('/', urlencodedParser, async (req, res) => {
     const { title, content, author } = req.body;
+    const currentTime = new Date();
   
     try {
-      const newPost = await BlogPost.create({
-        title,
-        content,
-        author,
-      });
-  
-      res.status(201).json(newPost);
+      //Response object
+      const createdPost = await blogController.createPost(author, content, title, currentTime);
+      //can use the data part of the object with the message in order to send the id and the message for the FE component
+      if(createdPost.status == OK){
+        //can send data back from response object if we need to
+        res.status(OK).send(createdPost.message);
+      }
+      else if(createdPost.status == ERR){
+        res.status(ERR).send(createdPost.message);
+      }
+      else{
+        res.status(DENIED).send("Sorry Neh, you failed to can")
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error creating post' });
@@ -32,37 +43,53 @@ blogRouter.post('/', async (req, res) => {
   });
 
   // Add a comment to a post
-blogRouter.post('/comments', async (req, res) => {
-    const { text, author, postId } = req.body;
+blogRouter.post('/comment', urlencodedParser, async (req, res) => {
+    const { text, author, postID } = req.body;
   
     try {
-      const updatedPost = await BlogPost.findByIdAndUpdate(
-        postId,
-        {
-          $push: { comments: { text, author } },
-        },
-        { new: true }
-      );
-  
-      res.json(updatedPost);
+      //Response object
+      const updatedPost = await blogController.postComment(author, postID, text);
+
+      if(updatedPost.status == OK){
+        //can send data back from response object if we need to
+        res.status(OK).send(updatedPost.message);
+      }
+      else if(updatedPost.status == ERR){
+        res.status(ERR).send(updatedPost.message);
+      }
+      else{
+        res.status(DENIED).send("Sorry Neh, you failed to can")
+      }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error adding comment' });
+      res.status(ERR).json({ message: 'Error adding comment' });
     }
   });
   
   // Get a user's blog posts with comments
-  blogRouter.get('/posts/:author', async (req, res) => {
-    const author = req.params.author;
-  
-    try {
-      const posts = await BlogPost.find({ author }).sort('-createdAt');
-      res.json(posts);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error fetching user posts' });
-    }
-  });
+blogRouter.get('/', urlencodedParser, async (req, res) => {
+  const author = req.query.author;
+  const reqCount = req.query.reqCount;
+  try {
+    const posts = await blogController.getPostsForAuthors(author, reqCount, BATCH);
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching user posts' });
+  }
+});
+
+blogRouter.get('/latest', urlencodedParser, async (req, res) => {
+  const reqCount = req.query.reqCount;
+
+  try {
+    const posts = await blogController.getLatestFeed(reqCount, BATCH);
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching user posts' });
+  }
+});
 
 
 module.exports = blogRouter;
