@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "strict": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "sourceMap": true
+    },
+    
+    "files": [
+      "./scripts/comments.ts",
+    ]
+  //   "include": ["src/**/*"],
+  //   "exclude": ["**/*.spec.ts"]
+  }
+  
