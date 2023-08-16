@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm i && npx tsc",
+    "build": "webpack && npm i && npx tsc",
     "start": "node index.js",
-    "buildRun": "npx tsc && node index.js",
-    "build-frontend": "webpack",
+    "buildRun": "webpack && npx tsc && node index.js",
     "start-frontend": "webpack serve"
   },
   "repository": {
