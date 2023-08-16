@@ -1,5 +1,6 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 import blogModel from '../models/blogPost';
+import userModel from '../models/user';
 import Response from "../Tools/Response"
 
 //local testing uri
@@ -87,3 +88,16 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
   }
 };
 
+export const createUser = async(author : string, TMSTAMP: any) => {
+  try {
+    const user = await userModel.create({
+      author,
+      TMSTAMP
+    })
+
+    return new Response(200, SUCCESS_POST, user)
+  } catch (error) {
+    console.log(error)
+    return new Response(500, FAIL_POST, error)
+  }
+}

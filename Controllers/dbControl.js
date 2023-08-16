@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLatestPosts = exports.getAuthorPosts = exports.createPost = exports.postComment = void 0;
+exports.createUser = exports.getLatestPosts = exports.getAuthorPosts = exports.createPost = exports.postComment = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const blogPost_1 = __importDefault(require("../models/blogPost"));
+const user_1 = __importDefault(require("../models/user"));
 const Response_1 = __importDefault(require("../Tools/Response"));
 //local testing uri
 const uri = "mongodb://0.0.0.0:27017/blogPost";
@@ -92,3 +93,17 @@ const getLatestPosts = (reqCount, batch) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.getLatestPosts = getLatestPosts;
+const createUser = (author, TMSTAMP) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield user_1.default.create({
+            author,
+            TMSTAMP
+        });
+        return new Response_1.default(200, SUCCESS_POST, user);
+    }
+    catch (error) {
+        console.log(error);
+        return new Response_1.default(500, FAIL_POST, error);
+    }
+});
+exports.createUser = createUser;
