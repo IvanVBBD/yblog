@@ -92,6 +92,7 @@ const getLatestPosts = async (reqCount, batch) => {
   }
 };
 
+// will have to evaluate how we determine this to not have duplicates, author names an or display names like twitter/x.com
 const createUser = async(author, TMSTAMP) => {
   try {
     const user = await userModel.create({
