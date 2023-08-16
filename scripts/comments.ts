@@ -22,7 +22,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const postContainer = document.querySelector(".posts");
 
-  blogPosts.data.forEach((element: { author: string | null; title: string | null; content: string | null; createdAt: string | null; }) => {
+  blogPosts.data.forEach((element: {
+    comments: any; author: string | null; title: string | null; content: string | null; createdAt: string | null; 
+}) => {
     const post = document.createElement("section");
     post.classList.add("post");
 
@@ -78,24 +80,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     likeButton.classList.add("button");
     post.appendChild(likeButton);
 
-  // <section class="comments">
-  //   <section class="new-comment">
-  //     <input type="text" id="comment-input" placeholder="Enter your comment">
-  //   </section>
-  //   <section class="comment">
-  //     <img
-  //       src="./logo_filled_black.png"
-  //       class="comment-icon"
-  //       alt="icon of this particular Blog Y user"
-  //     />
-  //     <h4 class="comment-display-name">Lone Husk</h4>
-  //     <h4 class="comment-username">@lonehusk</h4>
-  //     <h6 class="comment-date-stamp">1:35 PM Aug 11, 2023</h6>
-  //     <p class="comment-text">
-  //       Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-  //       simply random text. This is a comment.
-  //     </p>
-  //   </section>
+    if(element.comments.length > 0){
+      const comments = document.createElement("section");
+      comments.classList.add("comments");
+
+      element.comments.forEach((commentElement: {
+        author: string | null; content: string | null; createdAt: string | null; 
+    }) => {
+        //   <section class="new-comment">
+        //     <input type="text" id="comment-input" placeholder="Enter your comment">
+        //   </section>
+
+        const comment = document.createElement("section");
+        comment.classList.add("comment");
+        comments.appendChild(comment);
+
+        const commentIcon = document.createElement("img");
+        commentIcon.src = "./logo_filled_black.png";
+        commentIcon.classList.add("comment-icon");
+        comments.appendChild(commentIcon);
+
+        const commentDisplayName = document.createElement("h4");
+        commentDisplayName.textContent = commentElement.author;
+        commentDisplayName.classList.add("comment-display-name");
+        comments.appendChild(commentDisplayName);
+
+        const commentUsername = document.createElement("h4");
+        commentUsername.textContent = commentElement.author;
+        commentUsername.classList.add("comment-username");
+        comments.appendChild(commentUsername);
+
+        const commentDateStamp = document.createElement("h6");
+        commentDateStamp.textContent = commentElement.createdAt;
+        commentDateStamp.classList.add("comment-date-stamp");
+        comments.appendChild(commentDateStamp);
+
+        const commentText = document.createElement("p");
+        commentText.textContent = commentElement.content;
+        commentText.classList.add("comment-text");
+        comments.appendChild(commentText);
+      });
+      post.appendChild(comments);
+    }
   postContainer?.appendChild(post);
 
 });
