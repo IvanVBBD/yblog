@@ -1,44 +1,52 @@
-const express = require("express");
-const userController = require("../Controllers/userController");
-const userRouter = express.Router();
-const bodyParser = require('body-parser')
-
-//body parser configs
-userRouter.use(bodyParser.json());
-userRouter.use(bodyParser.urlencoded({
-  extended: true 
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const userController_1 = require("../Controllers/userController");
+const body_parser_1 = __importDefault(require("body-parser"));
+const userRouter = express_1.default.Router();
+userRouter.use(body_parser_1.default.json());
+userRouter.use(body_parser_1.default.urlencoded({
+    extended: true
 }));
-const urlencodedParser = bodyParser.urlencoded({
-  extended: false 
+const urlencodedParser = body_parser_1.default.urlencoded({
+    extended: false
 });
-
-//Outcomes
+// Outcomes
 const OK = 200;
 const ERR = 500;
 const DENIED = 403;
-
-// create user
-userRouter.post('/create', urlencodedParser, async (req, res)=>{
-  const author = req.body.author;
-  try {
-    const TMSTAMP = new Date().toLocaleDateString();
-    const user = await userController.createUser(author, TMSTAMP);
-
-    if(user.status == OK){
-      //can send data back from response object if we need to
-      res.status(OK).send(user.message);
+// Create user
+userRouter.post('/create', urlencodedParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("body", req.body);
+    const author = req.body.author ? req.body.author.toString() : "";
+    try {
+        console.log('AUTHOR:', author);
+        const TMSTAMP = new Date().toLocaleDateString();
+        const user = yield (0, userController_1.createUserControl)(author, TMSTAMP);
+        if (user.status == OK) {
+            res.status(OK).send(user.message);
+        }
+        else if (user.status == ERR) {
+            res.status(ERR).send(user.message);
+        }
+        else {
+            res.status(DENIED).send("Sorry Neh, you failed to can");
+        }
     }
-    else if(user.status == ERR){
-      res.status(ERR).send(user.message);
+    catch (error) {
+        res.status(ERR).json({ message: 'Error creating user' });
     }
-    else{
-      res.status(DENIED).send("Sorry Neh, you failed to can")
-    }
-
-  } catch (error) {
-    res.status(ERR).json({ message: 'Error creating user' });
-  }
-})
-
-
-module.exports = userRouter;
+}));
+exports.default = userRouter;
