@@ -66,6 +66,9 @@ const createPost = (author, content, title, time, postID) => __awaiter(void 0, v
 });
 exports.createPost = createPost;
 const getAuthorPosts = (author, reqCount, batch) => __awaiter(void 0, void 0, void 0, function* () {
+    if (reqCount <= 0) {
+        reqCount = 1;
+    }
     try {
         const posts = yield blogPost_1.default.find({ author: author }).skip(reqCount).sort('-createdAt').limit(batch);
         return new Response_1.default(200, SUCCESS_GET, posts);
@@ -76,6 +79,9 @@ const getAuthorPosts = (author, reqCount, batch) => __awaiter(void 0, void 0, vo
 });
 exports.getAuthorPosts = getAuthorPosts;
 const getLatestPosts = (reqCount, batch) => __awaiter(void 0, void 0, void 0, function* () {
+    if (reqCount <= 0) {
+        reqCount = 1;
+    }
     try {
         // skipping to choose those not yet fetched, without it gets the same 10 posts
         const skip = (reqCount - 1) * batch;

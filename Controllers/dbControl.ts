@@ -62,6 +62,9 @@ export const createPost = async (author : string, content : string, title : stri
 };
 
 export const getAuthorPosts = async (author : string, reqCount : number, batch : number) => {
+  if(reqCount <= 0){
+    reqCount = 1;
+  }
   try {
     const posts = await blogModel.find({ author: author }).skip(reqCount).sort('-createdAt').limit(batch);
     return new Response(200, SUCCESS_GET, posts);
@@ -71,6 +74,9 @@ export const getAuthorPosts = async (author : string, reqCount : number, batch :
 };
 
 export const getLatestPosts = async (reqCount : number, batch : number) => {
+  if(reqCount <= 0){
+    reqCount = 1;
+  }
   try {
     // skipping to choose those not yet fetched, without it gets the same 10 posts
     const skip = (reqCount-1)*batch;
