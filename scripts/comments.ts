@@ -1,8 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-  setupPage();
-  loadBlogs();
-});
-
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
 function setupPage() {
@@ -205,3 +200,6 @@ function isNearBottom(element: HTMLElement | null): boolean {
 
   return scrollHeight - scrollTop - clientHeight <= scrollThreshold;
 }
+
+setupPage();
+loadBlogs();
