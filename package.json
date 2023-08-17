@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack && npm i && npx tsc",
+    "build": "npm i && webpack && npx tsc",
     "start": "node index.js",
     "buildRun": "webpack && npx tsc && node index.js",
     "start-frontend": "webpack serve"
