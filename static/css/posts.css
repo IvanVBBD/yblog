@@ -247,6 +247,7 @@ main .posts {
 }
 
 input[type="text"], textarea {
+  margin: 0 0 1rem 0;
   padding: 1rem;
   background-color: var(--dark-accent-color);
   border: none;
@@ -256,6 +257,7 @@ input[type="text"], textarea {
 
 textarea {
   height: 50%;
+  resize: none;
 }
 
 #submitPost{
@@ -264,6 +266,12 @@ textarea {
   align-self: end;
 }
 
+#postsErrorText{
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+  color: var(--light-color);
+}
 
 @media (max-width: 1000px) {
   .popup-content {

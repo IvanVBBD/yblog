@@ -1,10 +1,15 @@
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
+
 function setupPage() {
   localStorage.setItem(reqCount, "0");
   localStorage.setItem(endOfBlogs, "false");
 
   const postContainer = document.getElementById("posts");
+  if(postContainer != null){
+    postContainer.innerHTML = "";
+  }
+
   postContainer?.addEventListener("scroll", () => {
     if (isNearBottom(postContainer)) {
       loadBlogs();
@@ -17,17 +22,74 @@ function setupPage() {
   const submitPostButton = document.getElementById("submitPost");
 
   openPopupButton?.addEventListener("click", () => {
+    if (postTitle) {
+      postTitle.value = "";
+    }
+    if (postBody) {
+      postBody.value = "";
+    }
     if (postPopup != null) {
       postPopup.style.display = "block";
     }
   });
 
   closePopup?.addEventListener("click", () => {
+    closePostPopup();
+  });
+
+  const postTitle = document.getElementById("postTitle") as HTMLInputElement;
+  const postBody = document.getElementById("postBody") as HTMLTextAreaElement;
+  const postsErrorText = document.getElementById("postsErrorText");
+
+  submitPostButton?.addEventListener("click", () => {
+    if (postsErrorText) {
+      postsErrorText.innerText = "";
+    }
+
+    if (postTitle.value == null || postTitle.value == "") {
+      if (postsErrorText != null) {
+        postsErrorText.innerText = "Please insert a blog title.";
+      }
+    } else if (postBody.value == null || postBody.value == "") {
+      if (postsErrorText != null) {
+        postsErrorText.innerText = "Please insert blog context.";
+      }
+    } else if (postBody.value.length > 300) {
+      if (postsErrorText != null) {
+        postsErrorText.innerText = "Please limit your blog to 300 characters.";
+      }
+    } else {
+      postNewBlog(postTitle?.value, postBody?.value);
+    }
+  });
+
+  function closePostPopup(){
     if (postPopup != null) {
       postPopup.style.display = "none";
     }
+  }
+
+  loadBlogs();
+  closePostPopup();
+}
+
+async function postNewBlog(title: string, body: string) {
+  const newBlogBody = {
+    title,
+    content: body,
+    author: "Jesse",
+  };
+  const blogPosts = await fetch(`/posts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newBlogBody),
   });
-  
+
+  if(blogPosts.status == 200){
+    setupPage();
+  }
 }
 
 let posts;
@@ -202,4 +264,3 @@ function isNearBottom(element: HTMLElement | null): boolean {
 }
 
 setupPage();
-loadBlogs();
