@@ -15,19 +15,27 @@ const urlencodedParser = bodyParser.urlencoded({
 const OK = 200;
 const ERR = 500;
 const DENIED = 403;
+const EXISTS = 11000;
 
 // Create user
 userRouter.post('/create', urlencodedParser, async (req: Request, res: Response) => {
+  const email = req.body.author? req.body.email.toString() : "";
   const author = req.body.author? req.body.author.toString() : "";
+  let username = randomize(author);
+  const TMSTAMP = new Date().toLocaleDateString();
   try {
-    const TMSTAMP = new Date().toLocaleDateString();
-    const user = await createUserControl(author, TMSTAMP);
+    let user = await createUserControl('john_shoemaker_30', email, author, TMSTAMP);
 
     if (user.status == OK) {
       res.status(OK).send(user.message);
     } else if (user.status == ERR) {
       res.status(ERR).send(user.message);
-    } else {
+    } else if (user.status == EXISTS){
+      username = randomize(author);
+      user = await createUserControl(username, email, author, TMSTAMP);
+      res.status(user.status).send(user.message);
+    } 
+    else {
       res.status(DENIED).send("Sorry Neh, you failed to can");
     }
 
@@ -35,5 +43,13 @@ userRouter.post('/create', urlencodedParser, async (req: Request, res: Response)
     res.status(ERR).json({ message: 'Error creating user' });
   }
 });
+
+function randomize (author: string): string{
+  const lowercase = author.toLowerCase().replace(' ', '_').trim();
+  // random number gen
+  const appendNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
+  const username = `${lowercase}_${appendNum}`
+  return username
+}
 
 export default userRouter;

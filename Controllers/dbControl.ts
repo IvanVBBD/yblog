@@ -27,6 +27,10 @@ const FAIL_PATCH = "Failed to update";
 const FAIL_DELETE = "Failed to delete";
 const FAIL_GET = "Failed to retrieve";
 
+const EXISTS = 'User already exists'
+const ERR_DUPLICATE = 11000;
+const USERNAME = "username"
+
 export const postComment = async (author : string, text : string, postID : string) => {
   try {
     const updatedPost = await blogModel.findOneAndUpdate(
@@ -56,7 +60,6 @@ export const createPost = async (author : string, content : string, title : stri
     });
     return new Response(200, SUCCESS_POST, newPost);
   } catch (error) {
-    console.log(error);
     return new Response(500, FAIL_POST, error);
   }
 };
@@ -88,22 +91,25 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
       .exec();
 
     return new Response(200, SUCCESS_GET, latestPosts);
-  } catch (e) {
-    console.log(e);
+  } catch (e : any) {
+    console.log(e.code === 11000);
     return new Response(500, FAIL_POST, e);
   }
 };
 
-export const createUser = async(author : string, TMSTAMP: any) => {
+export const createUser = async(username: string, email: string, author : string, TMSTAMP: any) => {
   try {
     const user = await userModel.create({
+      username,
+      email,
       author,
       TMSTAMP
     })
-
     return new Response(200, SUCCESS_POST, user)
-  } catch (error) {
-    console.log(error)
+  } catch (error : any) {
+    if(error.code === ERR_DUPLICATE && Object.keys(error.keyValue)[0].toString().toLowerCase() === USERNAME){
+      return new Response(ERR_DUPLICATE, EXISTS, error)
+    }
     return new Response(500, FAIL_POST, error)
   }
 }
