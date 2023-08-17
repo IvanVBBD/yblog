@@ -2,8 +2,10 @@
 :root {
   --primary-color: #1d9bf0;
   --primary-color-hover: #1a8cd8;
+  --primary-color-hover-transparent: #657c8c67;
   --light-color: #eff3f4;
   --light-color-hover: #b9bdbe;
+  --light-color-hover-transparent: #b9bdbe70;
   --dark-color: #000000;
   --dark-color-hover: #131313;
   --dark-accent-color: #16181c;

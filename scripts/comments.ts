@@ -6,14 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
 function setupPage() {
-  const commentButtons = document.getElementsByClassName("comment-button");
-
-  for (const element of commentButtons) {
-    element.addEventListener("click", () => {
-      console.log("TIME TO COMMENT");
-    });
-  }
-
   localStorage.setItem(reqCount, "0");
   localStorage.setItem(endOfBlogs, "false");
 
@@ -23,6 +15,38 @@ function setupPage() {
       loadBlogs();
     }
   });
+
+  const openPopupButton = document.getElementById("openPopupButton");
+  const closePopup = document.getElementById("closePopup");
+  const postPopup = document.getElementById("postPopup");
+  const submitPostButton = document.getElementById("submitPost");
+
+  openPopupButton?.addEventListener("click", () => {
+    if (postPopup != null) {
+      postPopup.style.display = "block";
+    }
+  });
+
+  closePopup?.addEventListener("click", () => {
+    if (postPopup != null) {
+      postPopup.style.display = "none";
+    }
+  });
+  
+}
+
+let posts;
+let commentButtons;
+
+function addPostsToArray() {
+  posts = document.getElementsByClassName("posts");
+  const commentButtons = document.getElementsByClassName("comment-button");
+
+  for (const element of commentButtons) {
+    element.addEventListener("click", () => {
+      console.log("TIME TO COMMENT");
+    });
+  }
 }
 
 function incrementReqCount() {
@@ -168,6 +192,8 @@ async function loadBlogs() {
       }
     );
   }
+
+  addPostsToArray();
 }
 
 function isNearBottom(element: HTMLElement | null): boolean {

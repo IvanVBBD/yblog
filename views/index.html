@@ -31,7 +31,7 @@
           <img src="./icon_blogs.png" />
           <a>Blogs</a>
         </li>
-        <li class="postItem">
+        <li class="postItem" id="openPopupButton">
           <img src="./icon_post.png" />
           <a>Post</a>
         </li>
@@ -39,167 +39,16 @@
     </aside>
     <main>
       <h1 class="main-heading">Home</h1>
-      <section class="posts" id="posts">
-        
-        <!-- <section class="post">
-          <img
-            src="./logo_filled_black.png"
-            class="icon"
-            alt="icon of this particular Blog Y user"
-          />
-          <h2 class="display-name">Lone Husk</h2>
-          <h3 class="username">@lonehusk</h3>
-          <button class="follow-button button">Follow</button>
-          <h2 class="blog-title">Blog Title Example</h2>
-          <p class="blog-text">
-            Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-            simply random text. Loren ate up some. Contrary to popular belief,
-            Lorem Ipsum is not simply random text. It has roots in a piece of
-            classical Latin literature from 45 BC, making it over 2000 years
-            old.
-          </p>
-          <h5 class="date-stamp">1:35 PM Aug 11, 2023</h5>
-          <h4 class="like-text">4206.9K likes</h4>
-          <button class="comment-button button">Comment</button>
-          <button class="like-button button">Like</button>
-          <section class="comments">
-            <section class="new-comment">
-              <input type="text" id="comment-input" placeholder="Enter your comment">
-            </section>
-            <section class="comment">
-              <img
-                src="./logo_filled_black.png"
-                class="comment-icon"
-                alt="icon of this particular Blog Y user"
-              />
-              <h4 class="comment-display-name">Lone Husk</h4>
-              <h4 class="comment-username">@lonehusk</h4>
-              <h6 class="comment-date-stamp">1:35 PM Aug 11, 2023</h6>
-              <p class="comment-text">
-                Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-                simply random text. This is a comment.
-              </p>
-            </section>
-            <section class="comment">
-              <img
-                src="./logo_filled_black.png"
-                class="comment-icon"
-                alt="icon of this particular Blog Y user"
-              />
-              <h4 class="comment-display-name">Lone Husk</h4>
-              <h4 class="comment-username">@lonehusk</h4>
-              <h6 class="comment-date-stamp">1:35 PM Aug 11, 2023</h6>
-              <p class="comment-text">
-                Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-                simply random text. This is a comment.
-              </p>
-            </section>
-            <section class="comment">
-              <img
-                src="./logo_filled_black.png"
-                class="comment-icon"
-                alt="icon of this particular Blog Y user"
-              />
-              <h4 class="comment-display-name">Lone Husk</h4>
-              <h4 class="comment-username">@lonehusk</h4>
-              <h6 class="comment-date-stamp">1:35 PM Aug 11, 2023</h6>
-              <p class="comment-text">
-                Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-                simply random text. This is a comment.
-              </p>
-            </section>
-            <section class="comment">
-              <img
-                src="./logo_filled_black.png"
-                class="comment-icon"
-                alt="icon of this particular Blog Y user"
-              />
-              <h4 class="comment-display-name">Lone Husk</h4>
-              <h4 class="comment-username">@lonehusk</h4>
-              <h6 class="comment-date-stamp">1:35 PM Aug 11, 2023</h6>
-              <p class="comment-text">
-                Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-                simply random text. This is a comment.
-              </p>
-            </section>
-            <section class="comment">
-              <img
-                src="./logo_filled_black.png"
-                class="comment-icon"
-                alt="icon of this particular Blog Y user"
-              />
-              <h4 class="comment-display-name">Lone Husk</h4>
-              <h4 class="comment-username">@lonehusk</h4>
-              <h6 class="comment-date-stamp">1:35 PM Aug 11, 2023</h6>
-              <p class="comment-text">
-                Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-                simply random text. This is a comment. Loren ate up some. Contrary to popular belief,
-                Lorem Ipsum is not simply random text. It has roots in a piece of
-                classical Latin literature from 45 BC, making it over 2000 years
-                old. Richard McClintock, a Latin professor at Hampden-Sydney College
-                in Virginia, looked up one of the more obscure Latin words,
-                consectetur, from a Lorem Ipsum passage,
-              </p>
-            </section>
-          </section>
+      <section class="posts" id="posts"></section>
+
+      <section class="popup" id="postPopup">
+        <section class="popup-content">
+          <span class="close" id="closePopup">&times;</span>
+          <h2>Create a New Blog</h2>
+          <input type="text" id="postTitle" placeholder="Enter title" />
+          <textarea id="postBody" placeholder="Enter body"></textarea>
+          <button id="submitPost" class="button">Post</button>
         </section>
-        <section class="post">
-          <img
-            src="./logo_filled_black.png"
-            class="icon"
-            alt="icon of this particular Blog Y user"
-          />
-          <h2 class="display-name">Lone Husk</h2>
-          <h3 class="username">@lonehusk</h3>
-          <button class="follow-button button">Follow</button>
-          <h2 class="blog-title">Blog Title Example</h2>
-          <p class="blog-text">
-            Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-            simply random text. Loren ate up some. Contrary to popular belief,
-            Lorem Ipsum is not simply random text. It has roots in a piece of
-            classical Latin literature from 45 BC, making it over 2000 years
-            old. Richard McClintock, a Latin professor at Hampden-Sydney College
-            in Virginia, looked up one of the more obscure Latin words,
-            consectetur, from a Lorem Ipsum passage, and going through the cites
-            of the word in classical literature, discovered the undoubtable
-            source. It has roots in a piece of classical Latin literature from
-            45 BC, making it over 2000 years old. Richard McClintock, a Latin
-            professor at Hampden-Sydney College in Virginia, looked up one of
-            the more obscure Latin words, consectetur, from a Lorem Ipsum
-            passage, and going through the cites of the word in classical
-            literature, discovered the undoubtable source.
-          </p>
-          <h5 class="date-stamp">1:35 PM Aug 11, 2023</h5>
-          <h4 class="like-text">4206.9K likes</h4>
-          <button class="comment-button button">Comment</button>
-          <button class="like-button button">Like</button>
-        </section>
-        <section class="post">
-          <img
-            src="./logo_filled_black.png"
-            class="icon"
-            alt="icon of this particular Blog Y user"
-          />
-          <h2 class="display-name">Lone Husk</h2>
-          <h3 class="username">@lonehusk</h3>
-          <button class="follow-button button">Follow</button>
-          <h2 class="blog-title">Blog Title Example</h2>
-          <p class="blog-text">
-            Loren ate up some. Contrary to popular belief, Lorem Ipsum is not
-            simply random text. Loren ate up some. Contrary to popular belief,
-            Lorem Ipsum is not simply random text. It has roots in a piece of
-            classical Latin literature from 45 BC, making it over 2000 years
-            old. Richard McClintock, a Latin professor at Hampden-Sydney College
-            in Virginia, looked up one of the more obscure Latin words,
-            consectetur, from a Lorem Ipsum passage, and going through the cites
-            of the word in classical literature, discovered the undoubtable
-            source.
-          </p>
-          <h5 class="date-stamp">1:35 PM Aug 11, 2023</h5>
-          <h4 class="like-text">4206.9K likes</h4>
-          <button class="comment-button button">Comment</button>
-          <button class="like-button button">Like</button>
-        </section> -->
       </section>
     </main>
   </body>
