@@ -48,6 +48,8 @@ body {
   border-style: none;
   font-family: inherit;
   font-weight: bold;
+  width: 10rem;
+  height: 2rem;
 }
 
 .button:hover {
@@ -126,6 +128,10 @@ a:hover {
   animation: spin 1s infinite linear;
 }
 
+.display-none{
+  display: none;
+}
+
 @media (max-width: 1000px) {
   h1 {
     text-align: center;
@@ -150,6 +156,11 @@ a:hover {
   }
   aside ul li img {
     padding: 0;
+  }
+
+  button{
+    width: 8rem;
+    min-width: 8rem;
   }
 }
 
@@ -195,5 +206,10 @@ a:hover {
 
   aside ul li.postItem {
     background-color: transparent;
+  }
+  
+  button{
+    min-width: 6rem;
+    width: 6rem;
   }
 }

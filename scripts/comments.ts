@@ -1,12 +1,15 @@
+import { postComment } from "../Controllers/dbControl";
+
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
+let postContainer = document.getElementById("posts");
 
 function setupPage() {
   localStorage.setItem(reqCount, "0");
   localStorage.setItem(endOfBlogs, "false");
 
-  const postContainer = document.getElementById("posts");
-  if(postContainer != null){
+  postContainer = document.getElementById("posts");
+  if (postContainer != null) {
     postContainer.innerHTML = "";
   }
 
@@ -63,7 +66,7 @@ function setupPage() {
     }
   });
 
-  function closePostPopup(){
+  function closePostPopup() {
     if (postPopup != null) {
       postPopup.style.display = "none";
     }
@@ -73,13 +76,43 @@ function setupPage() {
   closePostPopup();
 }
 
+async function postNewComment(text: string, author: string, index: number) {
+  if (text != null && text != "") {
+    if (postContainer != null && index != null && index >= 0) {
+      const post = postContainer?.children[index];
+      const postID = post.id;
+
+      const newCommentBody = {
+        text,
+        author,
+        postID,
+      };
+      const addCommentResult = await fetch(`/posts/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCommentBody),
+      });
+
+      if (addCommentResult.status == 200) {
+        setupPage();
+      }
+    } else {
+      console.log("Yah eish error handling part 1...");
+    }
+  } else {
+    console.log("Yah eish error handling part 2...");
+  }
+}
+
 async function postNewBlog(title: string, body: string) {
   const newBlogBody = {
     title,
     content: body,
     author: "Jesse",
   };
-  const blogPosts = await fetch(`/posts`, {
+  const blogPostResult = await fetch(`/posts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -87,7 +120,7 @@ async function postNewBlog(title: string, body: string) {
     body: JSON.stringify(newBlogBody),
   });
 
-  if(blogPosts.status == 200){
+  if (blogPostResult.status == 200) {
     setupPage();
   }
 }
@@ -95,14 +128,31 @@ async function postNewBlog(title: string, body: string) {
 let posts;
 let commentButtons;
 
-function addPostsToArray() {
+function createCommentButtons() {
   posts = document.getElementsByClassName("posts");
   const commentButtons = document.getElementsByClassName("comment-button");
 
-  for (const element of commentButtons) {
-    element.addEventListener("click", () => {
-      console.log("TIME TO COMMENT");
+  for (let i = 0; i < commentButtons.length; i++) {
+    commentButtons[i].addEventListener("click", () => {
+      commentButtons[i].classList.remove("display-none");
+      commentButtonClicked(i, commentButtons[i]);
     });
+  }
+}
+
+function resetCommentButtons() {
+  const commentButtons = document.getElementsByClassName("comment-button");
+
+  for (const element of commentButtons) {
+    element.classList.remove("display-none");
+  }
+  if (postContainer != null) {
+    for (const element of postContainer.children) {
+      const childElement = element.querySelector(".new-comment");
+      if (childElement != null) {
+        element.removeChild(childElement);
+      }
+    }
   }
 }
 
@@ -112,6 +162,36 @@ function incrementReqCount() {
     localStorage.setItem(reqCount, (parseInt(r) + 1).toString());
   } else {
     localStorage.setItem(reqCount, "1");
+  }
+}
+
+function commentButtonClicked(
+  index: number | null,
+  commentButton: Element | null
+) {
+  resetCommentButtons();
+  if (postContainer != null && index != null && index >= 0) {
+    commentButton?.classList.add("display-none");
+    const post = postContainer?.children[index];
+
+    const commentInputSection = document.createElement("section");
+    commentInputSection.classList.add("new-comment");
+    post.appendChild(commentInputSection);
+
+    const commentInput = document.createElement("input");
+    commentInput.classList.add("comment-input");
+    commentInput.placeholder = "Enter your comment.";
+    commentInputSection.appendChild(commentInput);
+
+    const postCommentButton = document.createElement("button");
+    postCommentButton.textContent = "Post";
+    postCommentButton.classList.add("post-comment-button");
+    postCommentButton.classList.add("button");
+    commentInputSection.appendChild(postCommentButton);
+
+    postCommentButton.addEventListener("click", () => {
+      postNewComment(commentInput.value, "Placeholder", index);
+    });
   }
 }
 
@@ -143,9 +223,14 @@ async function loadBlogs() {
         title: string | null;
         content: string | null;
         createdAt: string | null;
+        postID: string | null;
       }) => {
         const post = document.createElement("section");
         post.classList.add("post");
+
+        if (element.postID != null) {
+          post.id = element.postID;
+        }
 
         const icon = document.createElement("img");
         icon.src = "./logo_filled_black.png";
@@ -209,10 +294,6 @@ async function loadBlogs() {
               author: string | null;
               createdAt: string | null;
             }) => {
-              //   <section class="new-comment">
-              //     <input type="text" id="comment-input" placeholder="Enter your comment">
-              //   </section>
-
               const comment = document.createElement("section");
               comment.classList.add("comment");
               comments.appendChild(comment);
@@ -250,7 +331,7 @@ async function loadBlogs() {
     );
   }
 
-  addPostsToArray();
+  createCommentButtons();
 }
 
 function isNearBottom(element: HTMLElement | null): boolean {

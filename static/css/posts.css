@@ -71,8 +71,6 @@ main .posts {
   grid-column-start: 4;
   grid-row-start: 1;
   grid-row-end: 3;
-  width: 90%;
-  height: 2rem;
   place-self: center end;
   margin-right: 1rem;
 }
@@ -119,9 +117,6 @@ main .posts {
   grid-column-start: 3;
   grid-row-start: 5;
   grid-row-end: 7;
-
-  width: 90%;
-  height: 2rem;
   justify-self: center;
   place-self: center end;
   margin-right: 1rem;
@@ -131,8 +126,6 @@ main .posts {
   grid-column-start: 4;
   grid-row-start: 5;
   grid-row-end: 7;
-  width: 90%;
-  height: 2rem;
   justify-self: center;
   place-self: center end;
   margin-right: 1rem;
@@ -207,6 +200,44 @@ main .posts {
   text-align: justify;
   margin: 0;
 }
+
+.new-comment{
+  grid-column-start: 1;
+  grid-column-end: 5;
+  padding: 1rem;
+  background-color: var(--dark-color);
+  border-radius: 1rem;
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-input{
+  background-color: var(--dark-accent-color);
+  border: none;
+  border-radius: 4px;
+  color: var(--light-color);
+  width: 60%;
+  padding: 1rem;
+}
+
+.post-comment-button{
+  grid-column-start: 3;
+  min-width: 10rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 .popup {
   display: none;
