@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home / Y</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The home page for Blog Y." />
+    <link rel="stylesheet" type="text/css" href="./posts.css" />
+    <link rel="stylesheet" type="text/css" href="./comments.css" />
+
+    <link
+      rel="icon"
+      type="image.png"
+      href="./logo_filled_white.png"
+      sizes="16x16"
+    />
+  </head>
+  <body>
+    <section id="loading-screen">
+      <img src="./icon_loading.png" alt="loading icon" />
+    </section>
+    <aside>
+      <img src="./logo_white.png" class="nav-logo" />
+      <ul>
+        <li>
+          <img src="./icon_home.png" />
+          <a class="selected">Home</a>
+        </li>
+        <li>
+          <img src="./icon_blogs.png" />
+          <a>Blogs</a>
+        </li>
+        <li class="postItem" id="openPopupButton">
+          <img src="./icon_post.png" />
+          <a>Post</a>
+        </li>
+      </ul>
+    </aside>
+    <main>
+      <h1 class="main-heading">Home</h1>
+      <section class="posts" id="posts"></section>
+
+      <section class="popup" id="postPopup">
+        <section class="popup-content">
+          <span class="close" id="closePopup">&times;</span>
+          <h2>Create a New Blog</h2>
+          <input type="text" id="postTitle" placeholder="Enter title" />
+          <textarea id="postBody" placeholder="Enter body"></textarea>
+          <button id="submitPost" class="button">Post</button>
+        </section>
+      </section>
+    </main>
+    <script src="bundle.js" defer></script>
+  </body>
+</html>

@@ -29,10 +29,8 @@ const ERR = 500;
 const DENIED = 403;
 // Create user
 userRouter.post('/create', urlencodedParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("body", req.body);
     const author = req.body.author ? req.body.author.toString() : "";
     try {
-        console.log('AUTHOR:', author);
         const TMSTAMP = new Date().toLocaleDateString();
         const user = yield (0, userController_1.createUserControl)(author, TMSTAMP);
         if (user.status == OK) {

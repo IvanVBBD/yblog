@@ -49,6 +49,6 @@ const blogPostSchema = new Schema<IBlogPost>({
   comments: [commentSchema],
 });
 
-const BlogPost = mongoose.model<IBlogPost>('BlogPost', blogPostSchema);
+const BlogPost = mongoose.model<IBlogPost>('BlogPost', blogPostSchema, 'Posts');
 
 export default BlogPost;

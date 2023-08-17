@@ -12,19 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// src/routes.ts
 const express_1 = __importDefault(require("express"));
-const blogRoutes_1 = __importDefault(require("./routes/blogRoutes"));
-const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
-const siteRoutes_1 = __importDefault(require("./routes/siteRoutes"));
-const port = process.env.PORT || 3000;
-const app = (0, express_1.default)();
-app.use(express_1.default.static('scripts'));
-app.use(express_1.default.static('static/images'));
-app.use(express_1.default.static('static/css'));
-app.use(express_1.default.static('dist'));
-app.use("/posts", blogRoutes_1.default);
-app.use("/user", userRoutes_1.default);
-app.use("/", siteRoutes_1.default);
-app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("server is running on port: " + port);
+const body_parser_1 = __importDefault(require("body-parser"));
+const siteRouter = express_1.default.Router();
+const path = require('path');
+//body parser configs
+siteRouter.use(body_parser_1.default.json());
+siteRouter.use(body_parser_1.default.urlencoded({
+    extended: true
 }));
+const urlencodedParser = body_parser_1.default.urlencoded({
+    extended: false
+});
+//Outcomes
+const OK = 200;
+const ERR = 500;
+const DENIED = 403;
+const BATCH = 10;
+// Get a user's blog posts with comments
+siteRouter.get('/', urlencodedParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.sendFile(path.join(__dirname, '../views/index.html'));
+}));
+exports.default = siteRouter;

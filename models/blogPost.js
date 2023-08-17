@@ -56,5 +56,5 @@ const blogPostSchema = new mongoose_1.Schema({
     },
     comments: [commentSchema],
 });
-const BlogPost = mongoose_1.default.model('BlogPost', blogPostSchema);
+const BlogPost = mongoose_1.default.model('BlogPost', blogPostSchema, 'Posts');
 exports.default = BlogPost;
