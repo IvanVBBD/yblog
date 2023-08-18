@@ -250,6 +250,9 @@ async function loadBlogs(author: string | null) {
         const displayName = document.createElement("h2");
         displayName.textContent = element.author;
         displayName.classList.add("display-name");
+        displayName?.addEventListener("click", () => {
+          goToAuthorsPosts(element.author);
+        });
         post.appendChild(displayName);
 
         const username = document.createElement("h3");
@@ -377,5 +380,16 @@ homeButton?.addEventListener("click", () => {
 });
 
 const mainHeading = document.getElementById("main-heading");
+
+function goToAuthorsPosts(author : string | null)
+{
+  if(mainHeading && author){
+    mainHeading.innerText = author + "'s blogs";
+    homeButton?.classList.remove("selected");
+    myBlogsButton?.classList.remove("selected");
+    localStorage.setItem(currentAuthor, author);
+    setupPage();
+  }
+}
 
 setupPage();

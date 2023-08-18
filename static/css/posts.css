@@ -54,6 +54,7 @@ main .posts {
   margin: 0;
   height: fit-content;
   place-self: end stretch;
+  cursor: pointer;
 }
 
 .username {
