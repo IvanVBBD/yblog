@@ -358,6 +358,9 @@ const myBlogsButton = document.getElementById("my-blogs-button");
 myBlogsButton?.addEventListener("click", () => {
   homeButton?.classList.remove("selected");
   myBlogsButton.classList.add("selected");
+  if(mainHeading){
+    mainHeading.innerText = "My Blogs";
+  }
   localStorage.setItem(currentAuthor, "Jesse");
   setupPage();
 });
@@ -366,8 +369,13 @@ const homeButton = document.getElementById("home-button");
 homeButton?.addEventListener("click", () => {
   homeButton.classList.add("selected");
   myBlogsButton?.classList.remove("selected");
+  if(mainHeading){
+    mainHeading.innerText = "Home";
+  }
   localStorage.removeItem(currentAuthor);
   setupPage();
 });
+
+const mainHeading = document.getElementById("main-heading");
 
 setupPage();
