@@ -17,7 +17,7 @@ db.on("error", (err) => console.error(err.message));
 db.once("connected", () => console.log("Connected to db"));
 
 // CONSTANTS
-const SUCCESS_POST = "Successfully inserted";
+const SUCCESS_POST = "Success!";
 const SUCCESS_PATCH = "Successfully updated";
 const SUCCESS_DELETE = "Successfully deleted";
 const SUCCESS_GET = "Successfully retrieved";
@@ -99,7 +99,9 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
 
 export const createUser = async(username: string, email: string, author : string, TMSTAMP: any) => {
   try {
-    const user = await userModel.create({
+
+    //first see if exists, reply with user details if so
+    const user = await userModel.findOne({email:email}) || await userModel.create({
       username,
       email,
       author,

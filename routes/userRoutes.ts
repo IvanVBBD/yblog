@@ -27,13 +27,13 @@ userRouter.post('/create', urlencodedParser, async (req: Request, res: Response)
     let user = await createUserControl('john_shoemaker_30', email, author, TMSTAMP);
 
     if (user.status == OK) {
-      res.status(OK).send(user.message);
+      res.status(OK).json(user);
     } else if (user.status == ERR) {
-      res.status(ERR).send(user.message);
+      res.status(ERR).json(user);
     } else if (user.status == EXISTS){
       username = randomize(author);
       user = await createUserControl(username, email, author, TMSTAMP);
-      res.status(user.status).send(user.message);
+      res.status(user.status).json(user);
     } 
     else {
       res.status(DENIED).send("Sorry Neh, you failed to can");
