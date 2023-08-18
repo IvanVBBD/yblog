@@ -109,9 +109,6 @@ export const createUser = async(username: string, email: string, author : string
     })
     return new Response(200, SUCCESS_POST, user)
   } catch (error : any) {
-    if(error.code === ERR_DUPLICATE && Object.keys(error.keyValue)[0].toString().toLowerCase() === USERNAME){
-      return new Response(ERR_DUPLICATE, EXISTS, error)
-    }
     return new Response(500, FAIL_POST, error)
   }
 }
