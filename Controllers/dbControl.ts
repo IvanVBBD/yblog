@@ -1,7 +1,7 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 import blogModel from '../models/blogPost';
 import userModel from '../models/user';
-import Response from "../Tools/Response"
+import Response from "../Tools/Response";
 
 //local testing uri
 const uri = "mongodb://0.0.0.0:27017/blogPost";
@@ -17,7 +17,7 @@ db.on("error", (err) => console.error(err.message));
 db.once("connected", () => console.log("Connected to db"));
 
 // CONSTANTS
-const SUCCESS_POST = "Success!";
+const SUCCESS_POST = "Successfully posted";
 const SUCCESS_PATCH = "Successfully updated";
 const SUCCESS_DELETE = "Successfully deleted";
 const SUCCESS_GET = "Successfully retrieved";
@@ -114,4 +114,8 @@ export const createUser = async(username: string, email: string, author : string
     }
     return new Response(500, FAIL_POST, error)
   }
+}
+
+export const Username = async (username: string)=>{
+  return await userModel.findOne({username:username})
 }
