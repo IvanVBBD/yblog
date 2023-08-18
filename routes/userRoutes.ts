@@ -18,7 +18,7 @@ const DENIED = 403;
 const EXISTS = 11000;
 
 // Create user
-userRouter.post('/create', urlencodedParser, async (req: Request, res: Response) => {
+userRouter.post('/authenticate', urlencodedParser, async (req: Request, res: Response) => {
   const email = req.body.author? req.body.email.toString() : "";
   const author = req.body.author? req.body.author.toString() : "";
   let username = randomize(author);
