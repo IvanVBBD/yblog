@@ -22,13 +22,13 @@
     <aside>
       <img src="./logo_white.png" class="nav-logo" />
       <ul>
-        <li>
+        <li id = "home-button" class="selected">
           <img src="./icon_home.png" />
-          <a class="selected">Home</a>
+          <a>Home</a>
         </li>
-        <li>
+        <li id="my-blogs-button">
           <img src="./icon_blogs.png" />
-          <a>Blogs</a>
+          <a>My Blogs</a>
         </li>
         <li class="postItem" id="openPopupButton">
           <img src="./icon_post.png" />
@@ -37,7 +37,7 @@
       </ul>
     </aside>
     <main>
-      <h1 class="main-heading">Home</h1>
+      <h1 class="main-heading" id="main-heading">Home</h1>
       <section class="posts" id="posts"></section>
 
       <section class="popup" id="postPopup">
@@ -46,6 +46,7 @@
           <h2>Create a New Blog</h2>
           <input type="text" id="postTitle" placeholder="Enter title" />
           <textarea id="postBody" placeholder="Enter body"></textarea>
+          <p id="postsErrorText"></p>
           <button id="submitPost" class="button">Post</button>
         </section>
       </section>
