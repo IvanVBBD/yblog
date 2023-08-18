@@ -85,7 +85,12 @@ aside ul li:hover {
   background-color: var(--dark-color-hover);
   cursor: pointer;
 }
-aside ul li a.selected {
+
+aside ul li.selected {
+  background-color: var(--primary-color-hover-transparent);
+}
+
+aside ul li.selected a {
   font-weight: 1000;
 }
 
@@ -201,6 +206,7 @@ a:hover {
     height: 3rem;
   }
   aside ul li {
+    width: 20%;
     display: inline-block;
   }
 

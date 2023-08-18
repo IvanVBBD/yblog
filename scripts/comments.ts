@@ -2,6 +2,7 @@ import { postComment } from "../Controllers/dbControl";
 
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
+const currentAuthor = "currentAuthor";
 let postContainer = document.getElementById("posts");
 
 function setupPage() {
@@ -15,7 +16,7 @@ function setupPage() {
 
   postContainer?.addEventListener("scroll", () => {
     if (isNearBottom(postContainer)) {
-      loadBlogs();
+      loadBlogs(localStorage.getItem(currentAuthor));
     }
   });
 
@@ -72,7 +73,7 @@ function setupPage() {
     }
   }
 
-  loadBlogs();
+  loadBlogs(localStorage.getItem(currentAuthor));
   closePostPopup();
 }
 
@@ -195,18 +196,27 @@ function commentButtonClicked(
   }
 }
 
-async function loadBlogs() {
+async function loadBlogs(author: string | null) {
   if (localStorage.getItem(endOfBlogs) != "true") {
+    let urlParams = "";
+    if (author != null && author != "") {
+      urlParams =
+        "/posts/?reqCount=" +
+        localStorage.getItem(reqCount) +
+        "&author=" +
+        author;
+    } else {
+      urlParams = "/posts/latest?reqCount=" + localStorage.getItem(reqCount);
+    }
+    console.log("URL: ", urlParams);
+
     incrementReqCount();
     const blogPosts = JSON.parse(
       JSON.stringify(
         await (
-          await fetch(
-            `/posts/latest?reqCount=` + localStorage.getItem(reqCount),
-            {
-              method: "GET",
-            }
-          )
+          await fetch(urlParams, {
+            method: "GET",
+          })
         ).json()
       )
     );
@@ -343,5 +353,21 @@ function isNearBottom(element: HTMLElement | null): boolean {
 
   return scrollHeight - scrollTop - clientHeight <= scrollThreshold;
 }
+
+const myBlogsButton = document.getElementById("my-blogs-button");
+myBlogsButton?.addEventListener("click", () => {
+  homeButton?.classList.remove("selected");
+  myBlogsButton.classList.add("selected");
+  localStorage.setItem(currentAuthor, "Jesse");
+  setupPage();
+});
+
+const homeButton = document.getElementById("home-button");
+homeButton?.addEventListener("click", () => {
+  homeButton.classList.add("selected");
+  myBlogsButton?.classList.remove("selected");
+  localStorage.removeItem(currentAuthor);
+  setupPage();
+});
 
 setupPage();
