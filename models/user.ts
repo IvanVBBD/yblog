@@ -1,20 +1,33 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
 interface IUser extends Document {
+  username: string;
+  email: string;
   author: string;
   memeberSince: string;
+
 }
 
 const userSchema = new Schema<IUser>({
+  username:{
+    type: String,
+    minLength: 4,
+    required: true,
+    unique: true
+  },
+  email:{
+    type:String,
+    required: true,
+    unique: true
+  },
   author: {
     type: String,
     minlength: 2,
-    required: true,
-    unique: true,
+    required: true
   },
   memeberSince: {
     type: String,
-    default: new Date().toLocaleDateString(),
+    default: () => new Date().toLocaleDateString(),
   },
 });
 

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { createUserControl } from "../Controllers/userController";
+import { UsernameControl, createUserControl } from "../Controllers/userController";
 import bodyParser from 'body-parser';
 const userRouter = express.Router();
 
@@ -15,18 +15,24 @@ const urlencodedParser = bodyParser.urlencoded({
 const OK = 200;
 const ERR = 500;
 const DENIED = 403;
+const EXISTS = 11000;
 
 // Create user
-userRouter.post('/create', urlencodedParser, async (req: Request, res: Response) => {
+userRouter.post('/authenticate', urlencodedParser, async (req: Request, res: Response) => {
+  const email = req.body.author? req.body.email.toString() : "";
   const author = req.body.author? req.body.author.toString() : "";
+  const TMSTAMP = new Date().toLocaleDateString();
   try {
-    const TMSTAMP = new Date().toLocaleDateString();
-    const user = await createUserControl(author, TMSTAMP);
+
+    //empty username will throw error because of length constraints
+    const username = await UsernameControl(author) || "";
+
+    let user = await createUserControl(username, email, author, TMSTAMP);
 
     if (user.status == OK) {
-      res.status(OK).send(user.message);
+      res.status(OK).json(user);
     } else if (user.status == ERR) {
-      res.status(ERR).send(user.message);
+      res.status(ERR).json(user);
     } else {
       res.status(DENIED).send("Sorry Neh, you failed to can");
     }

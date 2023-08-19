@@ -1,7 +1,7 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 import blogModel from '../models/blogPost';
 import userModel from '../models/user';
-import Response from "../Tools/Response"
+import Response from "../Tools/Response";
 
 //local testing uri
 const uri = "mongodb://0.0.0.0:27017/blogPost";
@@ -17,7 +17,7 @@ db.on("error", (err) => console.error(err.message));
 db.once("connected", () => console.log("Connected to db"));
 
 // CONSTANTS
-const SUCCESS_POST = "Successfully inserted";
+const SUCCESS_POST = "Successfully posted";
 const SUCCESS_PATCH = "Successfully updated";
 const SUCCESS_DELETE = "Successfully deleted";
 const SUCCESS_GET = "Successfully retrieved";
@@ -26,6 +26,10 @@ const FAIL_POST = "Failed to insert";
 const FAIL_PATCH = "Failed to update";
 const FAIL_DELETE = "Failed to delete";
 const FAIL_GET = "Failed to retrieve";
+
+const EXISTS = 'User already exists'
+const ERR_DUPLICATE = 11000;
+const USERNAME = "username"
 
 export const postComment = async (author : string, text : string, postID : string) => {
   try {
@@ -56,7 +60,6 @@ export const createPost = async (author : string, content : string, title : stri
     });
     return new Response(200, SUCCESS_POST, newPost);
   } catch (error) {
-    console.log(error);
     return new Response(500, FAIL_POST, error);
   }
 };
@@ -88,22 +91,28 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
       .exec();
 
     return new Response(200, SUCCESS_GET, latestPosts);
-  } catch (e) {
-    console.log(e);
+  } catch (e : any) {
+    console.log(e.code === 11000);
     return new Response(500, FAIL_POST, e);
   }
 };
 
-export const createUser = async(author : string, TMSTAMP: any) => {
+export const createUser = async(username: string, email: string, author : string, TMSTAMP: any) => {
   try {
-    const user = await userModel.create({
+
+    //first see if exists, reply with user details if so
+    const user = await userModel.findOne({email:email}) || await userModel.create({
+      username,
+      email,
       author,
       TMSTAMP
     })
-
     return new Response(200, SUCCESS_POST, user)
-  } catch (error) {
-    console.log(error)
+  } catch (error : any) {
     return new Response(500, FAIL_POST, error)
   }
+}
+
+export const Username = async (username: string)=>{
+  return await userModel.findOne({username:username})
 }
