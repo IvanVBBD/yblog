@@ -77,7 +77,7 @@ function setupPage() {
   closePostPopup();
 }
 
-async function postNewComment(text: string, index: number) {
+async function postNewComment(text: string, index: number, commentButton: Element | null) {
   if (text != null && text != "") {
     if (postContainer != null && index != null && index >= 0) {
       const post = postContainer?.children[index];
@@ -99,8 +99,53 @@ async function postNewComment(text: string, index: number) {
       });
 
       if (addCommentResult.status == 200) {
-        setupPage();
+        commentButton?.classList.remove("display-none");
+        let commentList;
+        if(post.getElementsByClassName("comments").length > 0){
+          commentList = post.getElementsByClassName("comments")[0];
+        }else{
+          commentList = document.createElement("section");
+          commentList.classList.add("comments");
+          post.appendChild(commentList);
+        }
+      
+        const comment = document.createElement("section");
+        comment.classList.add("comment");
+        commentList.appendChild(comment);
+
+        const commentIcon = document.createElement("img");
+        commentIcon.src = "./logo_filled_black.png";
+        commentIcon.classList.add("comment-icon");
+        comment.appendChild(commentIcon);
+
+        const commentDisplayName = document.createElement("h4");
+        commentDisplayName.textContent = currentUserAuthor;
+        commentDisplayName.classList.add("comment-display-name");
+        commentDisplayName?.addEventListener("click", () => {
+          goToAuthorsPosts(currentUserUsername);
+        });
+        comment.appendChild(commentDisplayName);
+
+        const commentUsername = document.createElement("h4");
+        commentUsername.textContent = currentUserUsername;
+        commentUsername.classList.add("comment-username");
+        commentUsername?.addEventListener("click", () => {
+          goToAuthorsPosts(currentUserUsername);
+        });
+        comment.appendChild(commentUsername);
+
+        const commentDateStamp = document.createElement("h6");
+        let date = new Date();
+        commentDateStamp.textContent = date.toJSON();
+        commentDateStamp.classList.add("comment-date-stamp");
+        comment.appendChild(commentDateStamp);
+
+        const commentText = document.createElement("p");
+        commentText.textContent = text;
+        commentText.classList.add("comment-text");
+        comment.appendChild(commentText);
       }
+      post.removeChild(post.getElementsByClassName("new-comment")[0])
     } else {
       console.log("Yah eish error handling... Error adding comment.");
     }
@@ -194,7 +239,7 @@ function commentButtonClicked(
     commentInputSection.appendChild(postCommentButton);
 
     postCommentButton.addEventListener("click", () => {
-      postNewComment(commentInput.value, index);
+      postNewComment(commentInput.value, index, commentButton);
     });
   }
 }
