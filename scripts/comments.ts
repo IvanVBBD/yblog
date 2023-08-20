@@ -278,7 +278,12 @@ async function loadBlogs(author: string | null) {
 
         const likeText = document.createElement("h5");
         likeText.classList.add("like-text");
-        likeText.innerText = element.likes + " likes";
+        const likes = parseInt(element.likes);
+        if (likes == 1) {
+          likeText.innerText = element.likes + " like";
+        } else {
+          likeText.innerText = element.likes + " likes";
+        }
         post.appendChild(likeText);
 
         const commentButton = document.createElement("img");
@@ -396,24 +401,42 @@ async function likePost(
         if (buttonElement.classList.contains("unliked")) {
           buttonElement.src = "./icon_heart_filled_pink.png";
           const newLikes = parseInt(numLikesString);
-          numLikesText.innerText = newLikes.toString() + " likes";
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
           buttonElement.classList.remove("unliked");
         } else {
           buttonElement.src = "./icon_heart.png";
           const newLikes = parseInt(numLikesString) - 1;
-          numLikesText.innerText = newLikes.toString() + " likes";
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
           buttonElement.classList.add("unliked");
         }
       } else {
         if (buttonElement.classList.contains("liked")) {
           buttonElement.src = "./icon_heart.png";
           const newLikes = parseInt(numLikesString);
-          numLikesText.innerText = newLikes.toString() + " likes";
+
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
           buttonElement.classList.remove("liked");
         } else {
           buttonElement.src = "./icon_heart_filled_pink.png";
           const newLikes = parseInt(numLikesString) + 1;
-          numLikesText.innerText = newLikes.toString() + " likes";
+
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
           buttonElement.classList.add("liked");
         }
       }
