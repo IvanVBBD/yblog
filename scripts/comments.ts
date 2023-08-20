@@ -100,10 +100,10 @@ async function postNewComment(text: string, index: number) {
         setupPage();
       }
     } else {
-      console.log("Yah eish error handling part 1...");
+      console.log("Yah eish error handling... Error adding comment.");
     }
   } else {
-    console.log("Yah eish error handling part 2...");
+    console.log("Yah eish error handling... Error adding comment v2.");
   }
 }
 
@@ -397,13 +397,11 @@ async function likePost(
           buttonElement.src = "./icon_heart_filled_pink.png";
           const newLikes = parseInt(numLikesString);
           numLikesText.innerText = newLikes.toString() + " likes";
-          console.log("LIKE");
           buttonElement.classList.remove("unliked");
         } else {
           buttonElement.src = "./icon_heart.png";
           const newLikes = parseInt(numLikesString) - 1;
           numLikesText.innerText = newLikes.toString() + " likes";
-          console.log("UNLIKE");
           buttonElement.classList.add("unliked");
         }
       } else {
@@ -411,13 +409,11 @@ async function likePost(
           buttonElement.src = "./icon_heart.png";
           const newLikes = parseInt(numLikesString);
           numLikesText.innerText = newLikes.toString() + " likes";
-          console.log("UNLIKE");
           buttonElement.classList.remove("liked");
         } else {
           buttonElement.src = "./icon_heart_filled_pink.png";
           const newLikes = parseInt(numLikesString) + 1;
           numLikesText.innerText = newLikes.toString() + " likes";
-          console.log("LIKE");
           buttonElement.classList.add("liked");
         }
       }
