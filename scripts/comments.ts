@@ -307,21 +307,13 @@ async function loadBlogs(author: string | null) {
         }
         likeButton.classList.add("like-button");
         likeButton?.addEventListener("click", () => {
-          likePost(element.postID, likeButton, thisUserLikedThisPost, likeText, element.likes);
-        });
-        likeButton?.addEventListener("mouseover", () => {
-          if (thisUserLikedThisPost) {
-            likeButton.src = "./icon_heart.png";
-          } else {
-            likeButton.src = "./icon_heart_filled.png";
-          }
-        });
-        likeButton?.addEventListener("mouseout", () => {
-          if (thisUserLikedThisPost) {
-            likeButton.src = "./icon_heart_filled_pink.png";
-          } else {
-            likeButton.src = "./icon_heart.png";
-          }
+          likePost(
+            element.postID,
+            likeButton,
+            thisUserLikedThisPost,
+            likeText,
+            element.likes
+          );
         });
         likeButton.classList.add("button");
         post.appendChild(likeButton);
@@ -401,19 +393,33 @@ async function likePost(
 
     if (likePostResult.status == 200) {
       if (thisUserLikedThisPost) {
-        buttonElement.src = "./icon_heart.png";
-        const newLikes = parseInt(numLikesString) - 1;
-        numLikesString = newLikes.toString();
-        numLikesText.innerText = newLikes.toString() + " likes";
-        thisUserLikedThisPost = false;
-        console.log("UNLIKE");
+        if (buttonElement.classList.contains("unliked")) {
+          buttonElement.src = "./icon_heart_filled_pink.png";
+          const newLikes = parseInt(numLikesString);
+          numLikesText.innerText = newLikes.toString() + " likes";
+          console.log("LIKE");
+          buttonElement.classList.remove("unliked");
+        } else {
+          buttonElement.src = "./icon_heart.png";
+          const newLikes = parseInt(numLikesString) - 1;
+          numLikesText.innerText = newLikes.toString() + " likes";
+          console.log("UNLIKE");
+          buttonElement.classList.add("unliked");
+        }
       } else {
-        buttonElement.src = "./icon_heart_filled_pink.png";
-        const newLikes = parseInt(numLikesString) + 1;
-        numLikesString = newLikes.toString();
-        numLikesText.innerText = newLikes.toString() + " likes";
-        thisUserLikedThisPost = true;
-        console.log("LIKE");
+        if (buttonElement.classList.contains("liked")) {
+          buttonElement.src = "./icon_heart.png";
+          const newLikes = parseInt(numLikesString);
+          numLikesText.innerText = newLikes.toString() + " likes";
+          console.log("UNLIKE");
+          buttonElement.classList.remove("liked");
+        } else {
+          buttonElement.src = "./icon_heart_filled_pink.png";
+          const newLikes = parseInt(numLikesString) + 1;
+          numLikesText.innerText = newLikes.toString() + " likes";
+          console.log("LIKE");
+          buttonElement.classList.add("liked");
+        }
       }
     } else {
       console.log("Yah eish error handling... Error liking post.");
