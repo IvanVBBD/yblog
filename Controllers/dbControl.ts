@@ -97,7 +97,7 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
   }
 };
 
-export const createUser = async(username: string, email: string, author : string, TMSTAMP: any) => {
+export const createUser = async(username: string, email: string, author : string, img: string, TMSTAMP: any) => {
   try {
 
     //first see if exists, reply with user details if so
@@ -105,6 +105,7 @@ export const createUser = async(username: string, email: string, author : string
       username,
       email,
       author,
+      img,
       TMSTAMP
     })
     return new Response(200, SUCCESS_POST, user)

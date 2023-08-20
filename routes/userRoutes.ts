@@ -21,13 +21,14 @@ const EXISTS = 11000;
 userRouter.post('/authenticate', urlencodedParser, async (req: Request, res: Response) => {
   const email = req.body.author? req.body.email.toString() : "";
   const author = req.body.author? req.body.author.toString() : "";
+  const img = req.body.author? req.body.img.toString() : "";
   const TMSTAMP = new Date().toLocaleDateString();
   try {
 
     //empty username will throw error because of length constraints
     const username = await UsernameControl(author) || "";
 
-    let user = await createUserControl(username, email, author, TMSTAMP);
+    let user = await createUserControl(username, email, author, img, TMSTAMP);
 
     if (user.status == OK) {
       res.status(OK).json(user);
