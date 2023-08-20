@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css?family=Lato");
+:root {
+  --primary-color: #1d9bf0;
+  --primary-color-hover: #1a8cd8;
+  --primary-color-hover-transparent: #657c8c67;
+  --light-color: #eff3f4;
+  --light-color-hover: #b9bdbe;
+  --light-color-hover-transparent: #b9bdbe70;
+  --dark-color: #000000;
+  --dark-color-hover: #131313;
+  --dark-accent-color: #16181c;
+  --dark-accent-color-hover: #1d1f23;
+  --main-font: "Lato", "Arial", sans-serif;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  font-family: var(--main-font);
+  color: var(--light-color);
+  background-color: var(--dark-color);
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+#login {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+#login-image {
+  flex-grow: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#login-text {
+  flex-grow: 6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#happening-now {
+  font-weight: 800;
+  font-family: var(--main-font);
+  font-size: 4rem;
+}
+
+#join-today {
+  font-weight: 800;
+  font-family: var(--main-font);
+  font-size: 2rem;
+}
+
+.g_id_signin {
+  max-width: 20rem;
+}
