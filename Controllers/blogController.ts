@@ -24,9 +24,9 @@ export const createPostControl = async (author : string, username: string, conte
   }
 }
 
-export const getPostsForAuthors = async (author : string, reqCount : number, batch :number) => {
+export const getPostsForAuthors = async (username : string, reqCount : number, batch :number) => {
   try {
-    const response = await getAuthorPosts(author, reqCount, batch);
+    const response = await getAuthorPosts(username, reqCount, batch);
     return response;
   } catch (error) {
     console.log(error);

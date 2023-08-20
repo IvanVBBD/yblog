@@ -70,10 +70,10 @@ blogRouter.post('/comment', urlencodedParser, async (req : Request, res: Respons
   
   // Get a user's blog posts with comments
 blogRouter.get('/', urlencodedParser, async (req : Request, res: Response) => {
-  const author = req.query.author? req.query.author.toString() : "";
+  const username = req.query.username? req.query.username.toString() : "";
   const reqCount = req.query.reqCount ? parseInt(req.query.reqCount.toString()) : 10;
   try {
-    const posts = await getPostsForAuthors(author, reqCount, BATCH);
+    const posts = await getPostsForAuthors(username, reqCount, BATCH);
     res.json(posts);
   } catch (error) {
     console.error(error);

@@ -65,12 +65,13 @@ export const createPost = async (author : string, username: string, content : st
   }
 };
 
-export const getAuthorPosts = async (author : string, reqCount : number, batch : number) => {
+export const getAuthorPosts = async (username : string, reqCount : number, batch : number) => {
   if(reqCount <= 0){
     reqCount = 1;
   }
   try {
-    const posts = await blogModel.find({ author: author }).skip(reqCount).sort('-createdAt').limit(batch);
+    const skip = (reqCount-1)*batch;
+    const posts = await blogModel.find({ username: username }).skip(skip).sort('-createdAt').limit(batch);
     return new Response(200, SUCCESS_GET, posts);
   } catch (error) {
     return new Response(500, FAIL_POST, error);
