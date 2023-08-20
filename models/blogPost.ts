@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface IComment extends Document {
   text: string;
   author: string;
+  username: string;
   createdAt: Date;
 }
 
@@ -10,6 +11,7 @@ export interface IBlogPost extends Document {
   title: string;
   content: string;
   author: string;
+  username: string;
   createdAt: Date;
   postID: string;
   likes: number; // New property for likes
@@ -21,6 +23,7 @@ export interface IBlogPost extends Document {
 const commentSchema = new Schema<IComment>({
   text: String,
   author: String,
+  username: String,
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -38,6 +41,10 @@ const blogPostSchema = new Schema<IBlogPost>({
     maxlength: 300,
   },
   author: {
+    type: String,
+    required: true,
+  },
+  username: {
     type: String,
     required: true,
   },

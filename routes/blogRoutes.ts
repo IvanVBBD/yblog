@@ -21,12 +21,12 @@ const DENIED = 403;
 const BATCH = 10;
 
 blogRouter.post('/', urlencodedParser, async (req : Request, res: Response) => {
-    const { title, content, author } = req.body;
+    const { title, username, content, author } = req.body;
     const currentTime = new Date();
   
     try {
       //Response object
-      const createdPost = await createPostControl(author, content, title, currentTime);
+      const createdPost = await createPostControl(author, username, content, title, currentTime);
       //can use the data part of the object with the message in order to send the id and the message for the FE component
       if(createdPost.status == OK){
         //can send data back from response object if we need to
@@ -46,11 +46,11 @@ blogRouter.post('/', urlencodedParser, async (req : Request, res: Response) => {
 
   // Add a comment to a post
 blogRouter.post('/comment', urlencodedParser, async (req : Request, res: Response) => {
-    const { text, author, postID } = req.body;
+    const { text, author, username, postID } = req.body;
   
     try {
       //Response object
-      const updatedPost = await postCommentControl(author, postID, text);
+      const updatedPost = await postCommentControl(author,username, postID, text);
 
       if(updatedPost.status == OK){
         //can send data back from response object if we need to

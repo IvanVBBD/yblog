@@ -5,23 +5,21 @@ import Response from "../Tools/Response"
 const ERR = 'There was an issue, please try again later'
 const BATCH_SIZE = 10;
 
-export const postCommentControl = async (author : string,text : string, postID : string) => {
+export const postCommentControl = async (author : string,username: string, text : string, postID : string) => {
   try {
-    const response = await postComment(author,postID,text);
+    const response = await postComment(author, username,postID,text);
     return response;
   } catch (error) {
-    console.log(error);
     return new Response(500, ERR, error) 
   }
 }
 
-export const createPostControl = async (author : string,content : string,title : string, time :any) => {
+export const createPostControl = async (author : string, username: string, content : string,title : string, time :any) => {
   try {
     const postID = generateUniqueId(author,content,title,time);
-    const response = await createPost(author,content,title,time,postID);
+    const response = await createPost(author,username,content,title,time,postID);
     return response;
   } catch (error) {
-    console.log(error);
     return new Response(500, ERR, error) 
   }
 }

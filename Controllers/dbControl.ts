@@ -31,12 +31,12 @@ const EXISTS = 'User already exists'
 const ERR_DUPLICATE = 11000;
 const USERNAME = "username"
 
-export const postComment = async (author : string, text : string, postID : string) => {
+export const postComment = async (author : string, username: string, text : string, postID : string) => {
   try {
     const updatedPost = await blogModel.findOneAndUpdate(
       { postID: postID }, // Find the document based on the 'postID' field
       {
-        $push: { comments: { text, author } },
+        $push: { comments: { text, author, username } },
       },
       { new: true }
     );
@@ -49,7 +49,7 @@ export const postComment = async (author : string, text : string, postID : strin
   }
 };
 
-export const createPost = async (author : string, content : string, title : string, time : any, postID : string) => {
+export const createPost = async (author : string, username: string, content : string, title : string, time : any, postID : string) => {
   try {
     const newPost = await blogModel.create({
       title,
@@ -57,6 +57,7 @@ export const createPost = async (author : string, content : string, title : stri
       author,
       time,
       postID,
+      username,
     });
     return new Response(200, SUCCESS_POST, newPost);
   } catch (error) {
