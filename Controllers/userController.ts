@@ -4,9 +4,9 @@ import { randomize } from '../Tools/Randomize';
 
 const ERR = 'There was an issue, please try again later';
 
-export const createUserControl = async (username: string, email: string, author: string, TMSTAMP: string) => {
+export const createUserControl = async (username: string, email: string, author: string, img: string, TMSTAMP: string) => {
   try {
-    const response = await createUser(username, email, author, TMSTAMP);
+    const response = await createUser(username, email, author, img, TMSTAMP);
     return response;
   } catch (error) {
     return new Response(500, ERR, error);
@@ -23,7 +23,7 @@ export const UsernameControl = async (author:string)=>{
   while (doesExist){
     username = randomize(author);
     let res = await Username(username);
-    if(res){
+    if(!res){
       doesExist = false;
       break;
     }
