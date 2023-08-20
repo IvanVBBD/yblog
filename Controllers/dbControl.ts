@@ -97,6 +97,20 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
   }
 };
 
+export const likePost = async (author : string, postID : string) =>{
+    try{
+        const post = await blogModel.findOne({ postID: postID });
+        if (post) {
+        await post.updateLikes(author);                 
+        }
+        return new Response(200, SUCCESS_GET, true);
+    }catch(e){
+        console.log(e);
+        return new Response(500, FAIL_POST, e);
+    }
+
+}
+
 export const createUser = async(username: string, email: string, author : string, TMSTAMP: any) => {
   try {
 

@@ -1,6 +1,6 @@
 // src/routes.ts
 import express, { Request, Response } from 'express';
-import {postCommentControl, getPostsForAuthors, getLatestFeed, createPostControl} from "../Controllers/blogController"
+import {postCommentControl, getPostsForAuthors, getLatestFeed, createPostControl, likePostControl} from "../Controllers/blogController"
 import bodyParser from "body-parser"
 const blogRouter = express.Router();
 
@@ -92,5 +92,18 @@ blogRouter.get('/latest', urlencodedParser, async (req : Request, res: Response)
     res.status(500).json({ error: 'Error fetching user posts' });
   }
 });
+
+blogRouter.post('/like', urlencodedParser, async (req : Request, res : Response) =>{
+    try{
+        const {author, postID} = req.body;
+        console.log("we got here!!!");
+        const result = await likePostControl(author,postID);
+        res.status(200).json(result);
+    }catch(e){
+        console.log(e);
+        res.status(500).json({ error: 'Error liking user posts' });
+    }
+
+})
 
 export default blogRouter;
