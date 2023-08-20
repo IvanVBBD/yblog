@@ -5,7 +5,7 @@ interface IUser extends Document {
   email: string;
   author: string;
   memeberSince: string;
-
+  img: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -29,6 +29,9 @@ const userSchema = new Schema<IUser>({
     type: String,
     default: () => new Date().toLocaleDateString(),
   },
+  img: {
+    type: String
+  }
 });
 
 const UserModel: Model<IUser> = mongoose.model<IUser>("user", userSchema);
