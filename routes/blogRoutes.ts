@@ -96,7 +96,6 @@ blogRouter.get('/latest', urlencodedParser, async (req : Request, res: Response)
 blogRouter.post('/like', urlencodedParser, async (req : Request, res : Response) =>{
     try{
         const {author, postID} = req.body;
-        console.log("we got here!!!");
         const result = await likePostControl(author,postID);
         res.status(200).json(result);
     }catch(e){

@@ -29,7 +29,6 @@ main .posts {
   border-radius: 1rem;
   display: grid;
   grid-template-columns:  15% 45% 20% 20%;
-
   justify-content: center;
   margin: 0 0 1rem 0;
 }
@@ -99,7 +98,7 @@ main .posts {
   grid-column-end: 4;
   grid-row-start: 5;
 
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   margin: 0;
   color: var(--light-color-hover);
   font-style: italic;
@@ -112,24 +111,26 @@ main .posts {
 
   padding: 0 0 1rem 1rem;
   margin: 0;
+  font-weight: normal;
+  font-style: italic;
+  color: var(--like-color);
+}
+
+.comment-button, .like-button {
+  grid-row-start: 5;
+  grid-row-end: 7;
+  place-self: center end;
+  margin-right: 1rem;
+  width: 90%;
+  object-fit: contain;
 }
 
 .like-button {
   grid-column-start: 3;
-  grid-row-start: 5;
-  grid-row-end: 7;
-  justify-self: center;
-  place-self: center end;
-  margin-right: 1rem;
 }
 
-.comment-button {
+.comment-button{
   grid-column-start: 4;
-  grid-row-start: 5;
-  grid-row-end: 7;
-  justify-self: center;
-  place-self: center end;
-  margin-right: 1rem;
 }
 
 .comments{
