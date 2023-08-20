@@ -1,4 +1,4 @@
-import { postComment, createPost, getAuthorPosts, getLatestPosts } from "./dbControl";
+import { postComment, createPost, getAuthorPosts, getLatestPosts, likePost } from "./dbControl";
 import crypto from 'crypto';
 import Response from "../Tools/Response"
 
@@ -44,6 +44,16 @@ export const getLatestFeed = async (reqCount : number, batch : number) => {
     console.log(error);
     return new Response(500, ERR, error) 
   }
+}
+
+export const likePostControl = async (author : string, postID : string) =>{
+    try {
+        const response = await likePost(author,postID);
+        return response;
+      } catch (error) {
+        console.log(error);
+        return new Response(500, ERR, error) 
+      }
 }
 
 

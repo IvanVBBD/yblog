@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
 
 export interface IComment extends Document {
   text: string;
@@ -12,7 +12,10 @@ export interface IBlogPost extends Document {
   author: string;
   createdAt: Date;
   postID: string;
+  likes: number; // New property for likes
+  likedBy: string[];
   comments: IComment[];
+  updateLikes: (author: string) => Promise<void>;
 }
 
 const commentSchema = new Schema<IComment>({
@@ -46,9 +49,28 @@ const blogPostSchema = new Schema<IBlogPost>({
     type: String,
     required: true,
   },
+  likes: { type: Number, default: 0 },
+  likedBy: [{ type: String }],
   comments: [commentSchema],
 });
 
-const BlogPost = mongoose.model<IBlogPost>('BlogPost', blogPostSchema, 'Posts');
+blogPostSchema.methods.updateLikes = async function (
+    author: string
+  ) {
+    const authorIndex = this.likedBy.indexOf(author);
+  
+  if (authorIndex === -1) {
+    // Author not in likedBy array, so add the like
+    this.likedBy.push(author);
+    this.likes = this.likes + 1;
+  } else {
+    // Author already in likedBy array, so remove the like
+    this.likedBy.splice(authorIndex, 1);
+    this.likes = this.likes - 1;
+  }
+  await this.save();
+  };
+
+const BlogPost = mongoose.model<IBlogPost>("BlogPost", blogPostSchema, "Posts");
 
 export default BlogPost;
