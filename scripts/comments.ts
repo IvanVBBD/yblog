@@ -2,7 +2,7 @@ import { postComment } from "../Controllers/dbControl";
 
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
-const currentAuthor = "currentAuthor";
+const currentAuthorUsername = "currentAuthorUsername";
 let postContainer = document.getElementById("posts");
 
 function setupPage() {
@@ -16,7 +16,7 @@ function setupPage() {
 
   postContainer?.addEventListener("scroll", () => {
     if (isNearBottom(postContainer)) {
-      loadBlogs(localStorage.getItem(currentAuthor));
+      loadBlogs(localStorage.getItem(currentAuthorUsername));
     }
   });
 
@@ -73,7 +73,7 @@ function setupPage() {
     }
   }
 
-  loadBlogs(localStorage.getItem(currentAuthor));
+  loadBlogs(localStorage.getItem(currentAuthorUsername));
   closePostPopup();
 }
 
@@ -82,10 +82,12 @@ async function postNewComment(text: string, index: number) {
     if (postContainer != null && index != null && index >= 0) {
       const post = postContainer?.children[index];
       const postID = post.id;
-      const currentUser = "Placeholder";
+      const currentUserAuthor = "PlaceholderAuthor";
+      const currentUserUsername = "PlaceholderUsername";
       const newCommentBody = {
         text,
-        author: currentUser,
+        author: currentUserAuthor,
+        username: currentUserUsername,
         postID,
       };
       const addCommentResult = await fetch(`/posts/comment`, {
@@ -111,7 +113,8 @@ async function postNewBlog(title: string, body: string) {
   const newBlogBody = {
     title,
     content: body,
-    author: "Jesse",
+    username: "PlaceholderUsername",
+    author: "PlaceholderAuthor",
   };
   const blogPostResult = await fetch(`/posts`, {
     method: "POST",
@@ -196,15 +199,15 @@ function commentButtonClicked(
   }
 }
 
-async function loadBlogs(author: string | null) {
+async function loadBlogs(username: string | null) {
   if (localStorage.getItem(endOfBlogs) != "true") {
     let urlParams = "";
-    if (author != null && author != "") {
+    if (username != null && username != "") {
       urlParams =
         "/posts/?reqCount=" +
         localStorage.getItem(reqCount) +
-        "&author=" +
-        author;
+        "&username=" +
+        username;
     } else {
       urlParams = "/posts/latest?reqCount=" + localStorage.getItem(reqCount);
     }
@@ -227,6 +230,7 @@ async function loadBlogs(author: string | null) {
     const postContainer = document.querySelector(".posts");
     blogPosts.data.forEach(
       (element: {
+        username: string;
         likedBy: string;
         likes: string;
         comments: any;
@@ -252,13 +256,16 @@ async function loadBlogs(author: string | null) {
         displayName.textContent = element.author;
         displayName.classList.add("display-name");
         displayName?.addEventListener("click", () => {
-          goToAuthorsPosts(element.author);
+          goToAuthorsPosts(element.username);
         });
         post.appendChild(displayName);
 
         const username = document.createElement("h3");
-        username.textContent = element.author;
+        username.textContent = element.username;
         username.classList.add("username");
+        username?.addEventListener("click", () => {
+          goToAuthorsPosts(element.username);
+        });
         post.appendChild(username);
 
         const blogTitle = document.createElement("h2");
@@ -331,6 +338,7 @@ async function loadBlogs(author: string | null) {
             (commentElement: {
               text: string | null;
               author: string | null;
+              username: string | null;
               createdAt: string | null;
             }) => {
               const comment = document.createElement("section");
@@ -348,7 +356,7 @@ async function loadBlogs(author: string | null) {
               comment.appendChild(commentDisplayName);
 
               const commentUsername = document.createElement("h4");
-              commentUsername.textContent = commentElement.author;
+              commentUsername.textContent = commentElement.username;
               commentUsername.classList.add("comment-username");
               comment.appendChild(commentUsername);
 
@@ -384,7 +392,7 @@ async function likePost(
     const currentUser = "Placeholder";
 
     const likePostBody = {
-      author: currentUser,
+      username: currentUser,
       postID,
     };
 
@@ -465,7 +473,7 @@ myBlogsButton?.addEventListener("click", () => {
   if (mainHeading) {
     mainHeading.innerText = "My Blogs";
   }
-  localStorage.setItem(currentAuthor, "Jesse");
+  localStorage.setItem(currentAuthorUsername, "Jesse");
   setupPage();
 });
 
@@ -476,18 +484,18 @@ homeButton?.addEventListener("click", () => {
   if (mainHeading) {
     mainHeading.innerText = "Home";
   }
-  localStorage.removeItem(currentAuthor);
+  localStorage.removeItem(currentAuthorUsername);
   setupPage();
 });
 
 const mainHeading = document.getElementById("main-heading");
 
-function goToAuthorsPosts(author: string | null) {
-  if (mainHeading && author) {
-    mainHeading.innerText = author + "'s blogs";
+function goToAuthorsPosts(authorUsername: string | null) {
+  if (mainHeading && authorUsername) {
+    mainHeading.innerText = authorUsername + "'s blogs";
     homeButton?.classList.remove("selected");
     myBlogsButton?.classList.remove("selected");
-    localStorage.setItem(currentAuthor, author);
+    localStorage.setItem(currentAuthorUsername, authorUsername);
     setupPage();
   }
 }
