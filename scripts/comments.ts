@@ -1,5 +1,7 @@
 import { postComment } from "../Controllers/dbControl";
 
+const currentUserUsername = "adam_krazinski_855";
+const currentUserAuthor = "Adam Krazinski";
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
 const currentAuthorUsername = "currentAuthorUsername";
@@ -77,13 +79,15 @@ function setupPage() {
   closePostPopup();
 }
 
-async function postNewComment(text: string, index: number, commentButton: Element | null) {
+async function postNewComment(
+  text: string,
+  index: number,
+  commentButton: Element | null
+) {
   if (text != null && text != "") {
     if (postContainer != null && index != null && index >= 0) {
       const post = postContainer?.children[index];
       const postID = post.id;
-      const currentUserAuthor = "PlaceholderAuthor";
-      const currentUserUsername = "PlaceholderUsername";
       const newCommentBody = {
         text,
         author: currentUserAuthor,
@@ -101,14 +105,14 @@ async function postNewComment(text: string, index: number, commentButton: Elemen
       if (addCommentResult.status == 200) {
         commentButton?.classList.remove("display-none");
         let commentList;
-        if(post.getElementsByClassName("comments").length > 0){
+        if (post.getElementsByClassName("comments").length > 0) {
           commentList = post.getElementsByClassName("comments")[0];
-        }else{
+        } else {
           commentList = document.createElement("section");
           commentList.classList.add("comments");
           post.appendChild(commentList);
         }
-      
+
         const comment = document.createElement("section");
         comment.classList.add("comment");
         commentList.appendChild(comment);
@@ -145,7 +149,7 @@ async function postNewComment(text: string, index: number, commentButton: Elemen
         commentText.classList.add("comment-text");
         comment.appendChild(commentText);
       }
-      post.removeChild(post.getElementsByClassName("new-comment")[0])
+      post.removeChild(post.getElementsByClassName("new-comment")[0]);
     } else {
       console.log("Yah eish error handling... Error adding comment.");
     }
@@ -158,8 +162,8 @@ async function postNewBlog(title: string, body: string) {
   const newBlogBody = {
     title,
     content: body,
-    username: "PlaceholderUsername",
-    author: "PlaceholderAuthor",
+    username: currentUserUsername,
+    author: currentUserAuthor,
   };
   const blogPostResult = await fetch(`/posts`, {
     method: "POST",
@@ -351,8 +355,8 @@ async function loadBlogs(username: string | null) {
         post.appendChild(commentButton);
 
         let thisUserLikedThisPost = false;
-        for (let i = 0; i < element.likedBy.length; i++) {
-          if (element.likedBy[i] == "Placeholder") {
+        for (const e of element.likedBy) {
+          if (e == currentUserUsername) {
             thisUserLikedThisPost = true;
           }
         }
@@ -381,9 +385,11 @@ async function loadBlogs(username: string | null) {
 
           element.comments.forEach(
             (commentElement: {
+              likedBy: string;
               text: string | null;
               author: string | null;
               username: string | null;
+              _id: string;
               createdAt: string | null;
             }) => {
               const comment = document.createElement("section");
@@ -420,6 +426,29 @@ async function loadBlogs(username: string | null) {
               commentText.textContent = commentElement.text;
               commentText.classList.add("comment-text");
               comment.appendChild(commentText);
+
+              let thisUserLikedThisComment = false;
+              for (const c of commentElement.likedBy) {
+                if (c == currentUserUsername) {
+                  thisUserLikedThisComment = true;
+                }
+              }
+              const commentLikeButton = document.createElement("img");
+              if (thisUserLikedThisComment) {
+                commentLikeButton.src = "./icon_heart_filled_pink.png";
+              } else {
+                commentLikeButton.src = "./icon_heart.png";
+              }
+              commentLikeButton.classList.add("comment-like-button");
+              commentLikeButton?.addEventListener("click", () => {
+                likeComment(
+                  commentElement._id,
+                  commentLikeButton,
+                  thisUserLikedThisComment
+                );
+              });
+              commentLikeButton.classList.add("button");
+              comment.appendChild(commentLikeButton);
             }
           );
           post.appendChild(comments);
@@ -440,10 +469,8 @@ async function likePost(
   numLikesString: string
 ) {
   if (postID != null && postID != "") {
-    const currentUser = "Placeholder";
-
     const likePostBody = {
-      username: currentUser,
+      username: currentUserUsername,
       postID,
     };
 
@@ -507,6 +534,52 @@ async function likePost(
   }
 }
 
+async function likeComment(
+  commentID: string | null,
+  commentButtonElement: HTMLImageElement,
+  thisUserLikedThisComment: boolean
+) {
+  if (commentID != null && commentID != "") {
+
+    const likeCommentBody = {
+      username: currentUserUsername,
+      commentID,
+    };
+
+    const likeCommentResult = await fetch(`/posts/comment/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(likeCommentBody),
+    });
+
+    if (likeCommentResult.status == 200) {
+      if (thisUserLikedThisComment) {
+        if (commentButtonElement.classList.contains("unliked")) {
+          commentButtonElement.src = "./icon_heart_filled_pink.png";
+          commentButtonElement.classList.remove("unliked");
+        } else {
+          commentButtonElement.src = "./icon_heart.png";
+          commentButtonElement.classList.add("unliked");
+        }
+      } else {
+        if (commentButtonElement.classList.contains("liked")) {
+          commentButtonElement.src = "./icon_heart.png";
+          commentButtonElement.classList.remove("liked");
+        } else {
+          commentButtonElement.src = "./icon_heart_filled_pink.png";
+          commentButtonElement.classList.add("liked");
+        }
+      }
+    } else {
+      console.log("Yah eish error handling... Error liking comment.");
+    }
+  } else {
+    console.log("Yah eish error handling... Error liking comment v2.");
+  }
+}
+
 function isNearBottom(element: HTMLElement | null): boolean {
   if (!element) return false;
   const scrollTop = element.scrollTop;
@@ -524,7 +597,7 @@ myBlogsButton?.addEventListener("click", () => {
   if (mainHeading) {
     mainHeading.innerText = "My Blogs";
   }
-  localStorage.setItem(currentAuthorUsername, "Jesse");
+  localStorage.setItem(currentAuthorUsername, currentUserUsername);
   setupPage();
 });
 

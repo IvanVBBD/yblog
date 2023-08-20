@@ -148,7 +148,7 @@ main .posts {
 .comment{
   display: grid;
   justify-content: center;
-  grid-template-columns:  15% 40% 45%;
+  grid-template-columns: 15% 20% 20% 25% 20%;
   grid-template-rows: auto;
 }
 
@@ -166,6 +166,7 @@ main .posts {
 
 .comment-display-name {
   grid-column-start: 2;
+  grid-column-end: 4;
   grid-row-start: 1;
   padding: 0.5rem 0 0 1rem;
   margin: 0;
@@ -175,7 +176,8 @@ main .posts {
 }
 
 .comment-username {
-  grid-column-start: 3;
+  grid-column-start: 4;
+  grid-column-end: 6;
   grid-row-start: 1;
   padding: 0 1rem 0 1rem;
   margin: 0;
@@ -196,7 +198,7 @@ main .posts {
 }
 .comment-text {
   grid-column-start: 2;
-  grid-column-end: 5;
+  grid-column-end: 6;
   grid-row-start: 2;
   padding: 0.5rem 1rem 0 1rem;
   text-align: justify;
@@ -229,17 +231,14 @@ main .posts {
   min-width: 10rem;
 }
 
-
-
-
-
-
-
-
-
-
-
-
+.comment-like-button {
+  grid-row-start: 3;
+  grid-column-start: 5;
+  place-self: center end;
+  margin-right: 1rem;
+  width: 90%;
+  object-fit: contain;
+}
 
 .popup {
   display: none;
