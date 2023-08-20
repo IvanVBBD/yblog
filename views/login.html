@@ -30,8 +30,9 @@
         <div
           id="g_id_onload"
           data-client_id="315183206809-5v326tmjtgo87q20mtkg3p28f561qecu.apps.googleusercontent.com"
-          data-login_uri="http://localhost:300/login"
+          data-login_uri="http://localhost:3000"
           data-auto_prompt="false"
+          data-callback="handleCredentialResponse"
         ></div>
         <div
           class="g_id_signin"
@@ -47,3 +48,17 @@
     </section>
   </body>
 </html>
+<script>
+  function handleCredentialResponse(response) {
+    // decodeJwtResponse() is a custom function defined by you
+    // to decode the credential response.
+    const responsePayload = decodeJwtResponse(response.credential);
+
+    console.log("ID: " + responsePayload.sub);
+    console.log("Full Name: " + responsePayload.name);
+    console.log("Given Name: " + responsePayload.given_name);
+    console.log("Family Name: " + responsePayload.family_name);
+    console.log("Image URL: " + responsePayload.picture);
+    console.log("Email: " + responsePayload.email);
+  }
+</script>
