@@ -1,6 +1,6 @@
-import mongoose, { ConnectOptions } from 'mongoose';
-import blogModel from '../models/blogPost';
-import userModel from '../models/user';
+import mongoose, { ConnectOptions } from "mongoose";
+import blogModel, { IBlogPost, IComment } from "../models/blogPost";
+import userModel from "../models/user";
 import Response from "../Tools/Response";
 
 //local testing uri
@@ -27,21 +27,33 @@ const FAIL_PATCH = "Failed to update";
 const FAIL_DELETE = "Failed to delete";
 const FAIL_GET = "Failed to retrieve";
 
-const EXISTS = 'User already exists'
+const EXISTS = "User already exists";
 const ERR_DUPLICATE = 11000;
-const USERNAME = "username"
+const USERNAME = "username";
 
-export const postComment = async (author : string, text : string, postID : string) => {
+export const postComment = async (
+  author: string,
+  username: string,
+  text: string,
+  postID: string,
+  commentID: string,
+) => {
   try {
     const updatedPost = await blogModel.findOneAndUpdate(
-      { postID: postID }, // Find the document based on the 'postID' field
+      { postID: postID },
       {
-        $push: { comments: { text, author } },
+        $push: {
+          comments: {
+            text,
+            author,
+            commentID,
+            username
+          },
+        },
       },
       { new: true }
     );
 
-    // don't necessarily need updated post returned unless we want specifics
     return new Response(200, SUCCESS_POST, updatedPost);
   } catch (e) {
     console.log(e);
@@ -49,7 +61,7 @@ export const postComment = async (author : string, text : string, postID : strin
   }
 };
 
-export const createPost = async (author : string, content : string, title : string, time : any, postID : string) => {
+export const createPost = async (author : string, username: string, content : string, title : string, time : any, postID : string) => {
   try {
     const newPost = await blogModel.create({
       title,
@@ -57,6 +69,7 @@ export const createPost = async (author : string, content : string, title : stri
       author,
       time,
       postID,
+      username,
     });
     return new Response(200, SUCCESS_POST, newPost);
   } catch (error) {
@@ -64,25 +77,26 @@ export const createPost = async (author : string, content : string, title : stri
   }
 };
 
-export const getAuthorPosts = async (author : string, reqCount : number, batch : number) => {
+export const getAuthorPosts = async (username : string, reqCount : number, batch : number) => {
   if(reqCount <= 0){
     reqCount = 1;
   }
   try {
-    const posts = await blogModel.find({ author: author }).skip(reqCount).sort('-createdAt').limit(batch);
+    const skip = (reqCount-1)*batch;
+    const posts = await blogModel.find({ username: username }).skip(skip).sort('-createdAt').limit(batch);
     return new Response(200, SUCCESS_GET, posts);
   } catch (error) {
     return new Response(500, FAIL_POST, error);
   }
 };
 
-export const getLatestPosts = async (reqCount : number, batch : number) => {
-  if(reqCount <= 0){
+export const getLatestPosts = async (reqCount: number, batch: number) => {
+  if (reqCount <= 0) {
     reqCount = 1;
   }
   try {
     // skipping to choose those not yet fetched, without it gets the same 10 posts
-    const skip = (reqCount-1)*batch;
+    const skip = (reqCount - 1) * batch;
     const latestPosts = await blogModel
       .find()
       .skip(skip)
@@ -91,17 +105,17 @@ export const getLatestPosts = async (reqCount : number, batch : number) => {
       .exec();
 
     return new Response(200, SUCCESS_GET, latestPosts);
-  } catch (e : any) {
+  } catch (e: any) {
     console.log(e.code === 11000);
     return new Response(500, FAIL_POST, e);
   }
 };
 
-export const likePost = async (author : string, postID : string) =>{
+export const likePost = async (username : string, postID : string) =>{
     try{
         const post = await blogModel.findOne({ postID: postID });
         if (post) {
-        await post.updateLikes(author);                 
+        await post.updateLikes(username);                 
         }
         return new Response(200, SUCCESS_GET, true);
     }catch(e){
@@ -126,8 +140,38 @@ export const createUser = async(username: string, email: string, author : string
   } catch (error : any) {
     return new Response(500, FAIL_POST, error)
   }
-}
+};
 
-export const Username = async (username: string)=>{
-  return await userModel.findOne({username:username})
-}
+
+export const updateCommentLikes = async (commentID: string, username: string) => {
+  try {
+    // Find the blog post containing the comment with the specified commentID
+        const post = await blogModel.findOne({ "comments.commentID": commentID }) as IBlogPost;
+
+        if (!post) {
+          throw new Error("Blog post not found");
+        }
+
+        // Find the comment by commentID within the post's comments array
+        const comment = post.comments.find(comment => comment.commentID === commentID);
+    
+        if (!comment) {
+          throw new Error("Comment not found");
+        }
+        // Call the updateLikes function on the comment
+        await comment.updateLikes(username);
+    
+        // Save the updated comment
+        await comment.save();
+    
+        // Save the modified blog post
+        await post.save();
+    console.log("Comment likes updated successfully");
+  } catch (error) {
+    console.log("Error updating comment likes:", error);
+};
+};
+
+export const Username = async (username: string) => {
+  return await userModel.findOne({ username: username });
+};
