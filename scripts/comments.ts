@@ -353,11 +353,17 @@ async function loadBlogs(username: string | null) {
               const commentDisplayName = document.createElement("h4");
               commentDisplayName.textContent = commentElement.author;
               commentDisplayName.classList.add("comment-display-name");
+              commentDisplayName?.addEventListener("click", () => {
+                goToAuthorsPosts(commentElement.username);
+              });
               comment.appendChild(commentDisplayName);
 
               const commentUsername = document.createElement("h4");
               commentUsername.textContent = commentElement.username;
               commentUsername.classList.add("comment-username");
+              commentUsername?.addEventListener("click", () => {
+                goToAuthorsPosts(commentElement.username);
+              });
               comment.appendChild(commentUsername);
 
               const commentDateStamp = document.createElement("h6");

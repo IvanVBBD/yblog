@@ -65,6 +65,7 @@ main .posts {
   height: fit-content;
   place-self: start stretch;
   color: var(--light-color-hover);
+  cursor: pointer;
 }
 
 .follow-button {
@@ -171,6 +172,7 @@ main .posts {
   margin: 0;
   height: fit-content;
   place-self: center stretch;
+  cursor: pointer;
 }
 
 .comment-username {
@@ -181,6 +183,7 @@ main .posts {
   height: fit-content;
   place-self: center stretch;
   color: var(--light-color-hover);
+  cursor: pointer;
 }
 .comment-date-stamp {
   grid-column-start: 4;
