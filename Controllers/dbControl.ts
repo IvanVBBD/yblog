@@ -121,40 +121,37 @@ export const getLatestPosts = async (reqCount: number, batch: number) => {
   }
 };
 
-export const likePost = async (author: string, postID: string) => {
-  try {
-    const post = await blogModel.findOne({ postID: postID });
-    if (post) {
-      await post.updateLikes(author);
+export const likePost = async (author : string, postID : string) =>{
+    try{
+        const post = await blogModel.findOne({ postID: postID });
+        if (post) {
+        await post.updateLikes(author);                 
+        }
+        return new Response(200, SUCCESS_GET, true);
+    }catch(e){
+        console.log(e);
+        return new Response(500, FAIL_POST, e);
     }
-    return new Response(200, SUCCESS_GET, true);
-  } catch (e) {
-    console.log(e);
-    return new Response(500, FAIL_POST, e);
+
+};
+
+export const createUser = async(username: string, email: string, author : string, img: string, TMSTAMP: any) => {
+  try {
+
+    //first see if exists, reply with user details if so
+    const user = await userModel.findOne({email:email}) || await userModel.create({
+      username,
+      email,
+      author,
+      img,
+      TMSTAMP
+    })
+    return new Response(200, SUCCESS_POST, user)
+  } catch (error : any) {
+    return new Response(500, FAIL_POST, error)
   }
 };
 
-export const createUser = async (
-  username: string,
-  email: string,
-  author: string,
-  TMSTAMP: any
-) => {
-  try {
-    //first see if exists, reply with user details if so
-    const user =
-      (await userModel.findOne({ email: email })) ||
-      (await userModel.create({
-        username,
-        email,
-        author,
-        TMSTAMP,
-      }));
-    return new Response(200, SUCCESS_POST, user);
-  } catch (error: any) {
-    return new Response(500, FAIL_POST, error);
-  }
-};
 
 export const updateCommentLikes = async (commentID: string, author: string) => {
   try {
