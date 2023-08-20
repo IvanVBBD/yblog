@@ -33,9 +33,10 @@ const USERNAME = "username";
 
 export const postComment = async (
   author: string,
+  username: string,
   text: string,
   postID: string,
-  commentID: string
+  commentID: string,
 ) => {
   try {
     const updatedPost = await blogModel.findOneAndUpdate(
@@ -46,6 +47,7 @@ export const postComment = async (
             text,
             author,
             commentID,
+            username
           },
         },
       },
@@ -59,13 +61,7 @@ export const postComment = async (
   }
 };
 
-export const createPost = async (
-  author: string,
-  content: string,
-  title: string,
-  time: any,
-  postID: string
-) => {
+export const createPost = async (author : string, username: string, content : string, title : string, time : any, postID : string) => {
   try {
     const newPost = await blogModel.create({
       title,
@@ -73,6 +69,7 @@ export const createPost = async (
       author,
       time,
       postID,
+      username,
     });
     return new Response(200, SUCCESS_POST, newPost);
   } catch (error) {
@@ -80,20 +77,13 @@ export const createPost = async (
   }
 };
 
-export const getAuthorPosts = async (
-  author: string,
-  reqCount: number,
-  batch: number
-) => {
-  if (reqCount <= 0) {
+export const getAuthorPosts = async (username : string, reqCount : number, batch : number) => {
+  if(reqCount <= 0){
     reqCount = 1;
   }
   try {
-    const posts = await blogModel
-      .find({ author: author })
-      .skip(reqCount)
-      .sort("-createdAt")
-      .limit(batch);
+    const skip = (reqCount-1)*batch;
+    const posts = await blogModel.find({ username: username }).skip(skip).sort('-createdAt').limit(batch);
     return new Response(200, SUCCESS_GET, posts);
   } catch (error) {
     return new Response(500, FAIL_POST, error);
@@ -121,11 +111,11 @@ export const getLatestPosts = async (reqCount: number, batch: number) => {
   }
 };
 
-export const likePost = async (author : string, postID : string) =>{
+export const likePost = async (username : string, postID : string) =>{
     try{
         const post = await blogModel.findOne({ postID: postID });
         if (post) {
-        await post.updateLikes(author);                 
+        await post.updateLikes(username);                 
         }
         return new Response(200, SUCCESS_GET, true);
     }catch(e){
@@ -153,7 +143,7 @@ export const createUser = async(username: string, email: string, author : string
 };
 
 
-export const updateCommentLikes = async (commentID: string, author: string) => {
+export const updateCommentLikes = async (commentID: string, username: string) => {
   try {
     // Find the blog post containing the comment with the specified commentID
         const post = await blogModel.findOne({ "comments.commentID": commentID }) as IBlogPost;
@@ -169,7 +159,7 @@ export const updateCommentLikes = async (commentID: string, author: string) => {
           throw new Error("Comment not found");
         }
         // Call the updateLikes function on the comment
-        await comment.updateLikes(author);
+        await comment.updateLikes(username);
     
         // Save the updated comment
         await comment.save();
