@@ -1,13 +1,14 @@
-import { postComment, createPost, getAuthorPosts, getLatestPosts, likePost } from "./dbControl";
+import { postComment, createPost, getAuthorPosts, getLatestPosts, likePost, updateCommentLikes } from "./dbControl";
 import crypto from 'crypto';
 import Response from "../Tools/Response"
 
 const ERR = 'There was an issue, please try again later'
 const BATCH_SIZE = 10;
 
-export const postCommentControl = async (author : string,username: string, text : string, postID : string) => {
+export const postCommentControl = async (author : string, username: string, text : string, postID : string) => {
   try {
-    const response = await postComment(author, username,postID,text);
+    const commentID = generateUniqueId(author,postID,username,author);
+    const response = await postComment(author,username,text,postID,commentID);
     return response;
   } catch (error) {
     return new Response(500, ERR, error) 
@@ -44,14 +45,25 @@ export const getLatestFeed = async (reqCount : number, batch : number) => {
   }
 }
 
-export const likePostControl = async (author : string, postID : string) =>{
+export const likePostControl = async (username : string, postID : string) =>{
     try {
-        const response = await likePost(author,postID);
+        const response = await likePost(username,postID);
         return response;
       } catch (error) {
         console.log(error);
         return new Response(500, ERR, error) 
       }
+}
+
+export const likeCommentControl = async (username: string, commentID : string) => { 
+    try {
+        const response = await updateCommentLikes(commentID,username);
+        return response;
+      } catch (error) {
+        console.log(error);
+        return new Response(500, ERR, error) 
+      }
+
 }
 
 

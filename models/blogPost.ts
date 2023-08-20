@@ -5,6 +5,10 @@ export interface IComment extends Document {
   author: string;
   username: string;
   createdAt: Date;
+  commentID: string;
+  likes : number;
+  likedBy : string[];
+  updateLikes: (username: string) => Promise<void>;
 }
 
 export interface IBlogPost extends Document {
@@ -14,17 +18,20 @@ export interface IBlogPost extends Document {
   username: string;
   createdAt: Date;
   postID: string;
-  likes: number; // New property for likes
+  likes: number;
   likedBy: string[];
   comments: IComment[];
-  updateLikes: (author: string) => Promise<void>;
+  updateLikes: (username: string) => Promise<void>;
 }
 
 const commentSchema = new Schema<IComment>({
   text: String,
   author: String,
   username: String,
+  commentID: String,
   createdAt: { type: Date, default: Date.now },
+  likes: { type: Number, default: 0 },
+  likedBy: [{ type: String }],
 });
 
 const blogPostSchema = new Schema<IBlogPost>({
@@ -62,17 +69,34 @@ const blogPostSchema = new Schema<IBlogPost>({
 });
 
 blogPostSchema.methods.updateLikes = async function (
-    author: string
+  username: string
   ) {
-    const authorIndex = this.likedBy.indexOf(author);
+    const usernameIndex = this.likedBy.indexOf(username);
   
-  if (authorIndex === -1) {
+  if (usernameIndex === -1) {
     // Author not in likedBy array, so add the like
-    this.likedBy.push(author);
+    this.likedBy.push(username);
     this.likes = this.likes + 1;
   } else {
     // Author already in likedBy array, so remove the like
-    this.likedBy.splice(authorIndex, 1);
+    this.likedBy.splice(usernameIndex, 1);
+    this.likes = this.likes - 1;
+  }
+  await this.save();
+  };
+
+  commentSchema.methods.updateLikes = async function (
+    username: string
+  ) {
+    const usernameIndex = this.likedBy.indexOf(username);
+  
+  if (usernameIndex === -1) {
+    // Author not in likedBy array, so add the like
+    this.likedBy.push(username);
+    this.likes = this.likes + 1;
+  } else {
+    // Author already in likedBy array, so remove the like
+    this.likedBy.splice(usernameIndex, 1);
     this.likes = this.likes - 1;
   }
   await this.save();

@@ -1,6 +1,6 @@
 // src/routes.ts
 import express, { Request, Response } from 'express';
-import {postCommentControl, getPostsForAuthors, getLatestFeed, createPostControl, likePostControl} from "../Controllers/blogController"
+import {postCommentControl, getPostsForAuthors, getLatestFeed, createPostControl, likePostControl, likeCommentControl} from "../Controllers/blogController"
 import bodyParser from "body-parser"
 const blogRouter = express.Router();
 
@@ -50,7 +50,7 @@ blogRouter.post('/comment', urlencodedParser, async (req : Request, res: Respons
   
     try {
       //Response object
-      const updatedPost = await postCommentControl(author,username, postID, text);
+      const updatedPost = await postCommentControl(author,username, text, postID);
 
       if(updatedPost.status == OK){
         //can send data back from response object if we need to
@@ -95,15 +95,25 @@ blogRouter.get('/latest', urlencodedParser, async (req : Request, res: Response)
 
 blogRouter.post('/like', urlencodedParser, async (req : Request, res : Response) =>{
     try{
-        const {author, postID} = req.body;
+        const {username, postID} = req.body;
         console.log("we got here!!!");
-        const result = await likePostControl(author,postID);
+        const result = await likePostControl(username,postID);
+        res.status(200).json(result);
+    }catch(e){
+        res.status(500).json({ error: 'Error liking user posts' });
+    }
+
+})
+
+blogRouter.post("/comment/like",urlencodedParser, async (req : Request, res : Response) => {
+    try{
+        const {username, commentID} = req.body;
+        const result = await likeCommentControl(username,commentID);
         res.status(200).json(result);
     }catch(e){
         console.log(e);
         res.status(500).json({ error: 'Error liking user posts' });
     }
-
 })
 
 export default blogRouter;
