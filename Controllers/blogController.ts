@@ -1,4 +1,4 @@
-import { postComment, createPost, getAuthorPosts, getLatestPosts, likePost } from "./dbControl";
+import { postComment, createPost, getAuthorPosts, getLatestPosts, likePost, updateCommentLikes } from "./dbControl";
 import crypto from 'crypto';
 import Response from "../Tools/Response"
 
@@ -7,7 +7,8 @@ const BATCH_SIZE = 10;
 
 export const postCommentControl = async (author : string,text : string, postID : string) => {
   try {
-    const response = await postComment(author,postID,text);
+    const commentID = generateUniqueId(author,postID,postID,author);
+    const response = await postComment(author,text,postID,commentID);
     return response;
   } catch (error) {
     console.log(error);
@@ -54,6 +55,17 @@ export const likePostControl = async (author : string, postID : string) =>{
         console.log(error);
         return new Response(500, ERR, error) 
       }
+}
+
+export const likeCommentControl = async (author: string, commentID : string) => { 
+    try {
+        const response = await updateCommentLikes(commentID,author);
+        return response;
+      } catch (error) {
+        console.log(error);
+        return new Response(500, ERR, error) 
+      }
+
 }
 
 
