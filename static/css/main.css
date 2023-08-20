@@ -26,6 +26,7 @@ html {
   margin: 0;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+  overflow-wrap: anywhere;
 }
 
 /* Chrome, Safari and Opera */
