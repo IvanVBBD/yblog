@@ -28,7 +28,7 @@ main .posts {
   background-color: var(--dark-accent-color);
   border-radius: 1rem;
   display: grid;
-  grid-template-columns:  15% 45% 20% 20%;
+  grid-template-columns: 15% 45% 20% 20%;
 
   justify-content: center;
   margin: 0 0 1rem 0;
@@ -76,7 +76,7 @@ main .posts {
   margin-right: 1rem;
 }
 
-.blog-title{
+.blog-title {
   grid-column-start: 1;
   grid-column-end: 5;
   grid-row-start: 3;
@@ -132,7 +132,7 @@ main .posts {
   margin-right: 1rem;
 }
 
-.comments{
+.comments {
   grid-column-start: 1;
   grid-column-end: 5;
   grid-row-start: 8;
@@ -144,10 +144,10 @@ main .posts {
   padding-bottom: 0.5rem;
 }
 
-.comment{
+.comment {
   display: grid;
   justify-content: center;
-  grid-template-columns:  15% 25% 25% 35%;
+  grid-template-columns: 15% 25% 25% 35%;
   grid-template-rows: auto;
 }
 
@@ -202,7 +202,7 @@ main .posts {
   margin: 0;
 }
 
-.new-comment{
+.new-comment {
   grid-column-start: 1;
   grid-column-end: 5;
   padding: 1rem;
@@ -214,7 +214,7 @@ main .posts {
   align-items: center;
 }
 
-.comment-input{
+.comment-input {
   background-color: var(--dark-accent-color);
   border: none;
   border-radius: 4px;
@@ -223,22 +223,10 @@ main .posts {
   padding: 1rem;
 }
 
-.post-comment-button{
+.post-comment-button {
   grid-column-start: 3;
   min-width: 10rem;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 .popup {
   display: none;
@@ -250,7 +238,7 @@ main .posts {
   background-color: var(--primary-color-hover-transparent);
 }
 
-.popup h2{
+.popup h2 {
   text-align: center;
 }
 
@@ -263,9 +251,10 @@ main .posts {
   padding: 1rem;
   border-radius: 8px;
   display: flex;
+  gap: 0.5rem;
   flex-direction: column;
-  width: 40vw;
-  height: 40vh;
+  width: 45vw;
+  height: 45vh;
   justify-content: space-between;
 }
 
@@ -278,8 +267,8 @@ main .posts {
   cursor: pointer;
 }
 
-input[type="text"], textarea {
-  margin: 0 0 1rem 0;
+input[type="text"],
+textarea {
   padding: 1rem;
   background-color: var(--dark-accent-color);
   border: none;
@@ -292,13 +281,13 @@ textarea {
   resize: none;
 }
 
-#submitPost{
+#submitPost {
   width: 10rem;
   height: 2rem;
   align-self: end;
 }
 
-#postsErrorText{
+#postsErrorText {
   margin: 0;
   padding: 0;
   font-style: italic;
