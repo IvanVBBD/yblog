@@ -65,7 +65,7 @@
     localStorage.setItem("token", response.credential);
 
     const responsePayload = decodeJwtResponse(response.credential);
-    const res = await authCall({author : responsePayload.name, email:responsePayload.email, image: responsePayload.picture});
+    const res = await authCall({author : responsePayload.name, email:responsePayload.email, image: responsePayload.picture, token: response.credential});
   }
 
   async function authCall(responsePayload) {
