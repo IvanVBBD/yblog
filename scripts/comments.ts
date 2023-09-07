@@ -1,7 +1,7 @@
 import { postComment } from "../Controllers/dbControl";
 
-const currentUserUsername = "adam_krazinski_855";
-const currentUserAuthor = "Adam Krazinski";
+let currentUserUsername = "Username";
+let currentUserAuthor = "Author";
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
 const currentAuthorUsername = "currentAuthorUsername";
@@ -10,6 +10,8 @@ let postContainer = document.getElementById("posts");
 function setupPage() {
   localStorage.setItem(reqCount, "0");
   localStorage.setItem(endOfBlogs, "false");
+  currentUserUsername = localStorage.getItem("username") || "Username";
+  currentUserAuthor = localStorage.getItem("author") || "Author";
 
   postContainer = document.getElementById("posts");
   if (postContainer != null) {
