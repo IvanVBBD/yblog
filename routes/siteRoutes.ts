@@ -1,16 +1,18 @@
 // src/routes.ts
-import express, { Request, Response } from 'express';
-import bodyParser from "body-parser"
+import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
 const siteRouter = express.Router();
-const path = require('path');
+const path = require("path");
 
 //body parser configs
 siteRouter.use(bodyParser.json());
-siteRouter.use(bodyParser.urlencoded({
-  extended: true 
-}));
+siteRouter.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 const urlencodedParser = bodyParser.urlencoded({
-  extended: false 
+  extended: false,
 });
 
 //Outcomes
@@ -19,10 +21,17 @@ const ERR = 500;
 const DENIED = 403;
 const BATCH = 10;
 
-  
 // Get a user's blog posts with comments
-siteRouter.get('/', urlencodedParser, async (req : Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../views/index.html'));
+siteRouter.get("/", urlencodedParser, async (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "../views/index.html"));
 });
+
+siteRouter.get(
+  "/login",
+  urlencodedParser,
+  async (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "../views/login.html"));
+  }
+);
 
 export default siteRouter;
