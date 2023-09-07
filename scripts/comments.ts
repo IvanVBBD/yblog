@@ -31,22 +31,24 @@ let postContainer = document.getElementById("posts");
   const closePopup = document.getElementById("closePopup");
   const postPopup = document.getElementById("postPopup");
   const submitPostButton = document.getElementById("submitPost");
-  const loginButton = document.getElementById("loginButton") as HTMLImageElement;
-
+  const loginButtonImg = document.getElementById("loginButtonImg") as HTMLImageElement;
+  const loginButton = document.getElementById("loginButton");
+  const loginButtonText = document.getElementById("loginButtonText") as HTMLElement;
 
   if(currentUserAuthor !== "Author" && currentUserUsername !== "Username" && localStorage.getItem("token")){
     loggedIn = true;
   }
   console.log("login status: " + loggedIn);
 
-  if(loggedIn && loginButton){
-    loginButton.src = "./icon_logout.png";
+  if(loggedIn && loginButtonImg){
+    loginButtonImg.src = "./icon_logout.png";
+    loginButtonText.innerText = "Logout";
   }else{
-    loginButton.src = "./icon_login.png";
+    loginButtonImg.src = "./icon_login.png";
+    loginButtonText.innerText = "Login";
   }
 
   loginButton?.addEventListener("click", () => {
-    console.log("WELP");
     if(loggedIn){
       localStorage.clear();
     }

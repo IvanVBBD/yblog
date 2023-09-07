@@ -58,9 +58,14 @@ html::-webkit-scrollbar {
 }
 
 #join-today {
+  text-decoration: none;
   font-weight: 800;
   font-family: var(--main-font);
   font-size: 2rem;
+}
+a{
+  text-decoration: none;
+  color: white;
 }
 
 .g_id_signin {
