@@ -33,6 +33,10 @@ main .posts {
   margin: 0 0 1rem 0;
 }
 
+.login{
+  margin-top: 10vh;
+}
+
 .icon {
   object-fit: contain;
   padding: 1rem;
