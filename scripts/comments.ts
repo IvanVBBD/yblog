@@ -7,11 +7,13 @@ const endOfBlogs = "endOfBlogs";
 const currentAuthorUsername = "currentAuthorUsername";
 let postContainer = document.getElementById("posts");
 
-function setupPage() {
+ async function setupPage() {
   localStorage.setItem(reqCount, "0");
   localStorage.setItem(endOfBlogs, "false");
   currentUserUsername = localStorage.getItem("username") || "Username";
   currentUserAuthor = localStorage.getItem("author") || "Author";
+  console.log(currentUserUsername);
+  console.log(currentUserAuthor);
 
   postContainer = document.getElementById("posts");
   if (postContainer != null) {
@@ -117,6 +119,7 @@ async function postNewComment(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify(newCommentBody),
       });
@@ -188,6 +191,7 @@ async function postNewBlog(title: string, body: string) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      'Authorization': `Bearer ${localStorage.getItem("token")}`
     },
     body: JSON.stringify(newBlogBody),
   });
@@ -497,6 +501,7 @@ async function likePost(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(likePostBody),
     });
@@ -569,6 +574,7 @@ async function likeComment(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(likeCommentBody),
     });

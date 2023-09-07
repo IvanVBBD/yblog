@@ -65,18 +65,26 @@
     localStorage.setItem("token", response.credential);
 
     const responsePayload = decodeJwtResponse(response.credential);
+    localStorage.setItem("author", responsePayload.name);
     const res = await authCall({author : responsePayload.name, email:responsePayload.email, image: responsePayload.picture, token: response.credential});
+    console.log(res);
+    const username = await res.json();
+    console.log(username);
+    localStorage.setItem("username", username);
+    if(res.status == 200){
+      window.location.href = "/";
+    }
   }
 
   async function authCall(responsePayload) {
-    const addCommentResult = await fetch(`/authenticate`, {
+    const addCommentResult = await fetch(`/user/authenticate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(responsePayload),
     });
-
     return addCommentResult;
   }
 </script>

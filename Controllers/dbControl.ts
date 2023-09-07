@@ -73,6 +73,7 @@ export const createPost = async (author : string, username: string, content : st
     });
     return new Response(200, SUCCESS_POST, newPost);
   } catch (error) {
+    console.log(error);
     return new Response(500, FAIL_POST, error);
   }
 };
