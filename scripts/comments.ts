@@ -26,6 +26,23 @@ function setupPage() {
   const closePopup = document.getElementById("closePopup");
   const postPopup = document.getElementById("postPopup");
   const submitPostButton = document.getElementById("submitPost");
+  const loginButton = document.getElementById("loginButton") as HTMLImageElement;
+
+  let loggedIn = true;
+
+  if(loggedIn && loginButton){
+    loginButton.src = "./icon_logout.png";
+  }else{
+    loginButton.src = "./icon_login.png";
+  }
+
+  loginButton?.addEventListener("click", () => {
+    console.log("WELP");
+    if(loggedIn){
+      localStorage.clear();
+    }
+    window.location.href = "/Login";
+  });
 
   openPopupButton?.addEventListener("click", () => {
     if (postTitle) {
