@@ -1,8 +1,10 @@
 import { postComment } from "../Controllers/dbControl";
 
+const currentUserUsername = "adam_krazinski_855";
+const currentUserAuthor = "Adam Krazinski";
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
-const currentAuthor = "currentAuthor";
+const currentAuthorUsername = "currentAuthorUsername";
 let postContainer = document.getElementById("posts");
 
 function setupPage() {
@@ -16,7 +18,7 @@ function setupPage() {
 
   postContainer?.addEventListener("scroll", () => {
     if (isNearBottom(postContainer)) {
-      loadBlogs(localStorage.getItem(currentAuthor));
+      loadBlogs(localStorage.getItem(currentAuthorUsername));
     }
   });
 
@@ -73,19 +75,23 @@ function setupPage() {
     }
   }
 
-  loadBlogs(localStorage.getItem(currentAuthor));
+  loadBlogs(localStorage.getItem(currentAuthorUsername));
   closePostPopup();
 }
 
-async function postNewComment(text: string, author: string, index: number) {
+async function postNewComment(
+  text: string,
+  index: number,
+  commentButton: Element | null
+) {
   if (text != null && text != "") {
     if (postContainer != null && index != null && index >= 0) {
       const post = postContainer?.children[index];
       const postID = post.id;
-
       const newCommentBody = {
         text,
-        author,
+        author: currentUserAuthor,
+        username: currentUserUsername,
         postID,
       };
       const addCommentResult = await fetch(`/posts/comment`, {
@@ -97,13 +103,58 @@ async function postNewComment(text: string, author: string, index: number) {
       });
 
       if (addCommentResult.status == 200) {
-        setupPage();
+        commentButton?.classList.remove("display-none");
+        let commentList;
+        if (post.getElementsByClassName("comments").length > 0) {
+          commentList = post.getElementsByClassName("comments")[0];
+        } else {
+          commentList = document.createElement("section");
+          commentList.classList.add("comments");
+          post.appendChild(commentList);
+        }
+
+        const comment = document.createElement("section");
+        comment.classList.add("comment");
+        commentList.appendChild(comment);
+
+        const commentIcon = document.createElement("img");
+        commentIcon.src = "./logo_filled_black.png";
+        commentIcon.classList.add("comment-icon");
+        comment.appendChild(commentIcon);
+
+        const commentDisplayName = document.createElement("h4");
+        commentDisplayName.textContent = currentUserAuthor;
+        commentDisplayName.classList.add("comment-display-name");
+        commentDisplayName?.addEventListener("click", () => {
+          goToAuthorsPosts(currentUserUsername);
+        });
+        comment.appendChild(commentDisplayName);
+
+        const commentUsername = document.createElement("h4");
+        commentUsername.textContent = currentUserUsername;
+        commentUsername.classList.add("comment-username");
+        commentUsername?.addEventListener("click", () => {
+          goToAuthorsPosts(currentUserUsername);
+        });
+        comment.appendChild(commentUsername);
+
+        const commentDateStamp = document.createElement("h6");
+        let date = new Date();
+        commentDateStamp.textContent = date.toJSON();
+        commentDateStamp.classList.add("comment-date-stamp");
+        comment.appendChild(commentDateStamp);
+
+        const commentText = document.createElement("p");
+        commentText.textContent = text;
+        commentText.classList.add("comment-text");
+        comment.appendChild(commentText);
       }
+      post.removeChild(post.getElementsByClassName("new-comment")[0]);
     } else {
-      console.log("Yah eish error handling part 1...");
+      console.log("Yah eish error handling... Error adding comment.");
     }
   } else {
-    console.log("Yah eish error handling part 2...");
+    console.log("Yah eish error handling... Error adding comment v2.");
   }
 }
 
@@ -111,7 +162,8 @@ async function postNewBlog(title: string, body: string) {
   const newBlogBody = {
     title,
     content: body,
-    author: "Jesse",
+    username: currentUserUsername,
+    author: currentUserAuthor,
   };
   const blogPostResult = await fetch(`/posts`, {
     method: "POST",
@@ -191,24 +243,23 @@ function commentButtonClicked(
     commentInputSection.appendChild(postCommentButton);
 
     postCommentButton.addEventListener("click", () => {
-      postNewComment(commentInput.value, "Placeholder", index);
+      postNewComment(commentInput.value, index, commentButton);
     });
   }
 }
 
-async function loadBlogs(author: string | null) {
+async function loadBlogs(username: string | null) {
   if (localStorage.getItem(endOfBlogs) != "true") {
     let urlParams = "";
-    if (author != null && author != "") {
+    if (username != null && username != "") {
       urlParams =
         "/posts/?reqCount=" +
         localStorage.getItem(reqCount) +
-        "&author=" +
-        author;
+        "&username=" +
+        username;
     } else {
       urlParams = "/posts/latest?reqCount=" + localStorage.getItem(reqCount);
     }
-    console.log("URL: ", urlParams);
 
     incrementReqCount();
     const blogPosts = JSON.parse(
@@ -228,6 +279,9 @@ async function loadBlogs(author: string | null) {
     const postContainer = document.querySelector(".posts");
     blogPosts.data.forEach(
       (element: {
+        username: string;
+        likedBy: string;
+        likes: string;
         comments: any;
         author: string | null;
         title: string | null;
@@ -251,20 +305,17 @@ async function loadBlogs(author: string | null) {
         displayName.textContent = element.author;
         displayName.classList.add("display-name");
         displayName?.addEventListener("click", () => {
-          goToAuthorsPosts(element.author);
+          goToAuthorsPosts(element.username);
         });
         post.appendChild(displayName);
 
         const username = document.createElement("h3");
-        username.textContent = element.author;
+        username.textContent = element.username;
         username.classList.add("username");
+        username?.addEventListener("click", () => {
+          goToAuthorsPosts(element.username);
+        });
         post.appendChild(username);
-
-        // const followButton = document.createElement("button");
-        // followButton.textContent = "Follow";
-        // followButton.classList.add("follow-button");
-        // followButton.classList.add("button");
-        // post.appendChild(followButton);
 
         const blogTitle = document.createElement("h2");
         blogTitle.textContent = element.title;
@@ -281,21 +332,52 @@ async function loadBlogs(author: string | null) {
         dateStamp.classList.add("date-stamp");
         post.appendChild(dateStamp);
 
-        const likeText = document.createElement("h4");
+        const likeText = document.createElement("h5");
         likeText.classList.add("like-text");
+        const likes = parseInt(element.likes);
+        if (likes == 1) {
+          likeText.innerText = element.likes + " like";
+        } else {
+          likeText.innerText = element.likes + " likes";
+        }
         post.appendChild(likeText);
 
-        const commentButton = document.createElement("button");
-        commentButton.textContent = "Comment";
+        const commentButton = document.createElement("img");
+        commentButton.src = "./icon_comment.png";
         commentButton.classList.add("comment-button");
         commentButton.classList.add("button");
+        commentButton?.addEventListener("mouseover", () => {
+          commentButton.src = "./icon_comment_filled.png";
+        });
+        commentButton?.addEventListener("mouseout", () => {
+          commentButton.src = "./icon_comment.png";
+        });
         post.appendChild(commentButton);
 
-        // const likeButton = document.createElement("button");
-        // likeButton.textContent = "Like";
-        // likeButton.classList.add("like-button");
-        // likeButton.classList.add("button");
-        // post.appendChild(likeButton);
+        let thisUserLikedThisPost = false;
+        for (const e of element.likedBy) {
+          if (e == currentUserUsername) {
+            thisUserLikedThisPost = true;
+          }
+        }
+        const likeButton = document.createElement("img");
+        if (thisUserLikedThisPost) {
+          likeButton.src = "./icon_heart_filled_pink.png";
+        } else {
+          likeButton.src = "./icon_heart.png";
+        }
+        likeButton.classList.add("like-button");
+        likeButton?.addEventListener("click", () => {
+          likePost(
+            element.postID,
+            likeButton,
+            thisUserLikedThisPost,
+            likeText,
+            element.likes
+          );
+        });
+        likeButton.classList.add("button");
+        post.appendChild(likeButton);
 
         if (element.comments.length > 0) {
           const comments = document.createElement("section");
@@ -303,8 +385,11 @@ async function loadBlogs(author: string | null) {
 
           element.comments.forEach(
             (commentElement: {
+              likedBy: string;
               text: string | null;
               author: string | null;
+              username: string | null;
+              _id: string;
               createdAt: string | null;
             }) => {
               const comment = document.createElement("section");
@@ -319,11 +404,17 @@ async function loadBlogs(author: string | null) {
               const commentDisplayName = document.createElement("h4");
               commentDisplayName.textContent = commentElement.author;
               commentDisplayName.classList.add("comment-display-name");
+              commentDisplayName?.addEventListener("click", () => {
+                goToAuthorsPosts(commentElement.username);
+              });
               comment.appendChild(commentDisplayName);
 
               const commentUsername = document.createElement("h4");
-              commentUsername.textContent = commentElement.author;
+              commentUsername.textContent = commentElement.username;
               commentUsername.classList.add("comment-username");
+              commentUsername?.addEventListener("click", () => {
+                goToAuthorsPosts(commentElement.username);
+              });
               comment.appendChild(commentUsername);
 
               const commentDateStamp = document.createElement("h6");
@@ -335,6 +426,29 @@ async function loadBlogs(author: string | null) {
               commentText.textContent = commentElement.text;
               commentText.classList.add("comment-text");
               comment.appendChild(commentText);
+
+              let thisUserLikedThisComment = false;
+              for (const c of commentElement.likedBy) {
+                if (c == currentUserUsername) {
+                  thisUserLikedThisComment = true;
+                }
+              }
+              const commentLikeButton = document.createElement("img");
+              if (thisUserLikedThisComment) {
+                commentLikeButton.src = "./icon_heart_filled_pink.png";
+              } else {
+                commentLikeButton.src = "./icon_heart.png";
+              }
+              commentLikeButton.classList.add("comment-like-button");
+              commentLikeButton?.addEventListener("click", () => {
+                likeComment(
+                  commentElement._id,
+                  commentLikeButton,
+                  thisUserLikedThisComment
+                );
+              });
+              commentLikeButton.classList.add("button");
+              comment.appendChild(commentLikeButton);
             }
           );
           post.appendChild(comments);
@@ -345,6 +459,125 @@ async function loadBlogs(author: string | null) {
   }
 
   createCommentButtons();
+}
+
+async function likePost(
+  postID: string | null,
+  buttonElement: HTMLImageElement,
+  thisUserLikedThisPost: boolean,
+  numLikesText: HTMLElement,
+  numLikesString: string
+) {
+  if (postID != null && postID != "") {
+    const likePostBody = {
+      username: currentUserUsername,
+      postID,
+    };
+
+    const likePostResult = await fetch(`/posts/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(likePostBody),
+    });
+
+    if (likePostResult.status == 200) {
+      if (thisUserLikedThisPost) {
+        if (buttonElement.classList.contains("unliked")) {
+          buttonElement.src = "./icon_heart_filled_pink.png";
+          const newLikes = parseInt(numLikesString);
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
+          buttonElement.classList.remove("unliked");
+        } else {
+          buttonElement.src = "./icon_heart.png";
+          const newLikes = parseInt(numLikesString) - 1;
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
+          buttonElement.classList.add("unliked");
+        }
+      } else {
+        if (buttonElement.classList.contains("liked")) {
+          buttonElement.src = "./icon_heart.png";
+          const newLikes = parseInt(numLikesString);
+
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
+          buttonElement.classList.remove("liked");
+        } else {
+          buttonElement.src = "./icon_heart_filled_pink.png";
+          const newLikes = parseInt(numLikesString) + 1;
+
+          if (newLikes == 1) {
+            numLikesText.innerText = newLikes.toString() + " like";
+          } else {
+            numLikesText.innerText = newLikes.toString() + " likes";
+          }
+          buttonElement.classList.add("liked");
+        }
+      }
+    } else {
+      console.log("Yah eish error handling... Error liking post.");
+    }
+  } else {
+    console.log("Yah eish error handling... Error liking post v2.");
+  }
+}
+
+async function likeComment(
+  commentID: string | null,
+  commentButtonElement: HTMLImageElement,
+  thisUserLikedThisComment: boolean
+) {
+  if (commentID != null && commentID != "") {
+
+    const likeCommentBody = {
+      username: currentUserUsername,
+      commentID,
+    };
+
+    const likeCommentResult = await fetch(`/posts/comment/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(likeCommentBody),
+    });
+
+    if (likeCommentResult.status == 200) {
+      if (thisUserLikedThisComment) {
+        if (commentButtonElement.classList.contains("unliked")) {
+          commentButtonElement.src = "./icon_heart_filled_pink.png";
+          commentButtonElement.classList.remove("unliked");
+        } else {
+          commentButtonElement.src = "./icon_heart.png";
+          commentButtonElement.classList.add("unliked");
+        }
+      } else {
+        if (commentButtonElement.classList.contains("liked")) {
+          commentButtonElement.src = "./icon_heart.png";
+          commentButtonElement.classList.remove("liked");
+        } else {
+          commentButtonElement.src = "./icon_heart_filled_pink.png";
+          commentButtonElement.classList.add("liked");
+        }
+      }
+    } else {
+      console.log("Yah eish error handling... Error liking comment.");
+    }
+  } else {
+    console.log("Yah eish error handling... Error liking comment v2.");
+  }
 }
 
 function isNearBottom(element: HTMLElement | null): boolean {
@@ -361,10 +594,10 @@ const myBlogsButton = document.getElementById("my-blogs-button");
 myBlogsButton?.addEventListener("click", () => {
   homeButton?.classList.remove("selected");
   myBlogsButton.classList.add("selected");
-  if(mainHeading){
+  if (mainHeading) {
     mainHeading.innerText = "My Blogs";
   }
-  localStorage.setItem(currentAuthor, "Jesse");
+  localStorage.setItem(currentAuthorUsername, currentUserUsername);
   setupPage();
 });
 
@@ -372,22 +605,21 @@ const homeButton = document.getElementById("home-button");
 homeButton?.addEventListener("click", () => {
   homeButton.classList.add("selected");
   myBlogsButton?.classList.remove("selected");
-  if(mainHeading){
+  if (mainHeading) {
     mainHeading.innerText = "Home";
   }
-  localStorage.removeItem(currentAuthor);
+  localStorage.removeItem(currentAuthorUsername);
   setupPage();
 });
 
 const mainHeading = document.getElementById("main-heading");
 
-function goToAuthorsPosts(author : string | null)
-{
-  if(mainHeading && author){
-    mainHeading.innerText = author + "'s blogs";
+function goToAuthorsPosts(authorUsername: string | null) {
+  if (mainHeading && authorUsername) {
+    mainHeading.innerText = authorUsername + "'s blogs";
     homeButton?.classList.remove("selected");
     myBlogsButton?.classList.remove("selected");
-    localStorage.setItem(currentAuthor, author);
+    localStorage.setItem(currentAuthorUsername, authorUsername);
     setupPage();
   }
 }

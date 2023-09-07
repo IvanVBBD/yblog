@@ -28,8 +28,7 @@ main .posts {
   background-color: var(--dark-accent-color);
   border-radius: 1rem;
   display: grid;
-  grid-template-columns: 15% 45% 20% 20%;
-
+  grid-template-columns:  15% 45% 20% 20%;
   justify-content: center;
   margin: 0 0 1rem 0;
 }
@@ -66,6 +65,7 @@ main .posts {
   height: fit-content;
   place-self: start stretch;
   color: var(--light-color-hover);
+  cursor: pointer;
 }
 
 .follow-button {
@@ -96,10 +96,9 @@ main .posts {
 
 .date-stamp {
   grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column-end: 3;
   grid-row-start: 5;
-
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   margin: 0;
   color: var(--light-color-hover);
   font-style: italic;
@@ -112,24 +111,26 @@ main .posts {
 
   padding: 0 0 1rem 1rem;
   margin: 0;
+  font-weight: normal;
+  font-style: italic;
+  color: var(--like-color);
+}
+
+.comment-button, .like-button {
+  grid-row-start: 5;
+  grid-row-end: 7;
+  place-self: center end;
+  margin-right: 1rem;
+  width: 90%;
+  object-fit: contain;
 }
 
 .like-button {
   grid-column-start: 3;
-  grid-row-start: 5;
-  grid-row-end: 7;
-  justify-self: center;
-  place-self: center end;
-  margin-right: 1rem;
 }
 
-.comment-button {
+.comment-button{
   grid-column-start: 4;
-  grid-row-start: 5;
-  grid-row-end: 7;
-  justify-self: center;
-  place-self: center end;
-  margin-right: 1rem;
 }
 
 .comments {
@@ -147,7 +148,7 @@ main .posts {
 .comment {
   display: grid;
   justify-content: center;
-  grid-template-columns: 15% 25% 25% 35%;
+  grid-template-columns: 15% 20% 20% 25% 20%;
   grid-template-rows: auto;
 }
 
@@ -165,27 +166,31 @@ main .posts {
 
 .comment-display-name {
   grid-column-start: 2;
+  grid-column-end: 4;
   grid-row-start: 1;
-  padding: 0 0 0 1rem;
+  padding: 0.5rem 0 0 1rem;
   margin: 0;
   height: fit-content;
   place-self: center stretch;
+  cursor: pointer;
 }
 
 .comment-username {
-  grid-column-start: 3;
+  grid-column-start: 4;
+  grid-column-end: 6;
   grid-row-start: 1;
-  padding: 0 0 0 1rem;
+  padding: 0 1rem 0 1rem;
   margin: 0;
   height: fit-content;
   place-self: center stretch;
   color: var(--light-color-hover);
+  cursor: pointer;
 }
 .comment-date-stamp {
-  grid-column-start: 4;
-  grid-row-start: 1;
-
-  padding: 1rem 1rem 0.5rem 1rem;
+  grid-row-start: 3;
+  grid-column-start: 2;
+  grid-column-end: 4;
+  padding: 0 1rem 0.5rem 1rem;
   margin: 0;
   color: var(--light-color-hover);
   place-self: center stretch;
@@ -193,11 +198,9 @@ main .posts {
 }
 .comment-text {
   grid-column-start: 2;
-  grid-column-end: 5;
+  grid-column-end: 6;
   grid-row-start: 2;
-  font-size: small;
-
-  padding: 0 1rem 0 1rem;
+  padding: 0.5rem 1rem 0 1rem;
   text-align: justify;
   margin: 0;
 }
@@ -226,6 +229,15 @@ main .posts {
 .post-comment-button {
   grid-column-start: 3;
   min-width: 10rem;
+}
+
+.comment-like-button {
+  grid-row-start: 3;
+  grid-column-start: 5;
+  place-self: center end;
+  margin-right: 1rem;
+  width: 90%;
+  object-fit: contain;
 }
 
 .popup {
