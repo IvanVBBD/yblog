@@ -2,6 +2,7 @@ import { postComment } from "../Controllers/dbControl";
 
 let currentUserUsername = "Username";
 let currentUserAuthor = "Author";
+let loggedIn = false;
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
 const currentAuthorUsername = "currentAuthorUsername";
@@ -32,7 +33,11 @@ let postContainer = document.getElementById("posts");
   const submitPostButton = document.getElementById("submitPost");
   const loginButton = document.getElementById("loginButton") as HTMLImageElement;
 
-  let loggedIn = true;
+
+  if(currentUserAuthor !== "Author" && currentUserUsername !== "Username" && localStorage.getItem("token")){
+    loggedIn = true;
+  }
+  console.log("login status: " + loggedIn);
 
   if(loggedIn && loginButton){
     loginButton.src = "./icon_logout.png";
@@ -68,7 +73,7 @@ let postContainer = document.getElementById("posts");
   const postBody = document.getElementById("postBody") as HTMLTextAreaElement;
   const postsErrorText = document.getElementById("postsErrorText");
 
-  submitPostButton?.addEventListener("click", () => {
+  submitPostButton?.addEventListener("click", async () => {
     if (postsErrorText) {
       postsErrorText.innerText = "";
     }
@@ -86,7 +91,13 @@ let postContainer = document.getElementById("posts");
         postsErrorText.innerText = "Please limit your blog to 300 characters.";
       }
     } else {
-      postNewBlog(postTitle?.value, postBody?.value);
+      if(loggedIn){
+        await postNewBlog(postTitle?.value, postBody?.value);
+      }else{
+        window.location.href = "/login";
+      }
+
+      
     }
   });
 
@@ -187,6 +198,7 @@ async function postNewBlog(title: string, body: string) {
     username: currentUserUsername,
     author: currentUserAuthor,
   };
+
   const blogPostResult = await fetch(`/posts`, {
     method: "POST",
     headers: {
@@ -266,7 +278,13 @@ function commentButtonClicked(
     commentInputSection.appendChild(postCommentButton);
 
     postCommentButton.addEventListener("click", () => {
-      postNewComment(commentInput.value, index, commentButton);
+      if(loggedIn){
+        postNewComment(commentInput.value, index, commentButton);
+      }else{
+        window.location.href = "/login";
+      }
+
+
     });
   }
 }
@@ -391,13 +409,19 @@ async function loadBlogs(username: string | null) {
         }
         likeButton.classList.add("like-button");
         likeButton?.addEventListener("click", () => {
-          likePost(
-            element.postID,
-            likeButton,
-            thisUserLikedThisPost,
-            likeText,
-            element.likes
-          );
+          if(loggedIn){
+            likePost(
+              element.postID,
+              likeButton,
+              thisUserLikedThisPost,
+              likeText,
+              element.likes
+            );
+          }else{
+            window.location.href = "/login";
+          }
+
+
         });
         likeButton.classList.add("button");
         post.appendChild(likeButton);
@@ -464,11 +488,16 @@ async function loadBlogs(username: string | null) {
               }
               commentLikeButton.classList.add("comment-like-button");
               commentLikeButton?.addEventListener("click", () => {
-                likeComment(
-                  commentElement._id,
-                  commentLikeButton,
-                  thisUserLikedThisComment
-                );
+                if(loggedIn){
+                  likeComment(
+                    commentElement._id,
+                    commentLikeButton,
+                    thisUserLikedThisComment
+                  );
+                }else{
+                  window.location.href = "/login";
+                }
+
               });
               commentLikeButton.classList.add("button");
               comment.appendChild(commentLikeButton);
