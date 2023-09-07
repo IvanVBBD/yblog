@@ -13,6 +13,8 @@
       sizes="16x16"
     />
     <link rel="stylesheet" type="text/css" href="./login.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
   </head>
   <body>
     <section id="login">
@@ -22,7 +24,7 @@
       <section id="login-text">
         <p id="happening-now">Happening Now</p>
         <p id="join-today">Join Today.</p>
-       
+
         <div
           id="g_id_onload"
           data-client_id="315183206809-5v326tmjtgo87q20mtkg3p28f561qecu.apps.googleusercontent.com"
@@ -43,11 +45,7 @@
     </section>
   </body>
 </html>
- <script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-        ></script>
+
 <script>
   function decodeJwtResponse(token) {
     var base64Url = token.split(".")[1];
@@ -63,17 +61,22 @@
 
     return JSON.parse(jsonPayload);
   }
-
-  function handleCredentialResponse(response) {
-    const responsePayload = decodeJwtResponse(response.credential);
-
+  async function handleCredentialResponse(response) {
     localStorage.setItem("token", response.credential);
-    localStorage.setItem("ID: " , responsePayload.sub);
-    localStorage.setItem("Full Name: " , responsePayload.name);
-    localStorage.setItem("Given Name: " , responsePayload.given_name);
-    localStorage.setItem("Family Name: " , responsePayload.family_name);
-    localStorage.setItem("Image URL: " , responsePayload.picture);
-    localStorage.setItem("Email: " , responsePayload.email);
 
+    const responsePayload = decodeJwtResponse(response.credential);
+    const res = await authCall({author : responsePayload.name, email:responsePayload.email, image: responsePayload.picture, token: response.credential});
+  }
+
+  async function authCall(responsePayload) {
+    const addCommentResult = await fetch(`/authenticate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(responsePayload),
+    });
+
+    return addCommentResult;
   }
 </script>
