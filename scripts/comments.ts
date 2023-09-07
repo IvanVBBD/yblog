@@ -1,15 +1,19 @@
 import { postComment } from "../Controllers/dbControl";
 
-const currentUserUsername = "adam_krazinski_855";
-const currentUserAuthor = "Adam Krazinski";
+let currentUserUsername = "Username";
+let currentUserAuthor = "Author";
 const reqCount = "reqCount";
 const endOfBlogs = "endOfBlogs";
 const currentAuthorUsername = "currentAuthorUsername";
 let postContainer = document.getElementById("posts");
 
-function setupPage() {
+ async function setupPage() {
   localStorage.setItem(reqCount, "0");
   localStorage.setItem(endOfBlogs, "false");
+  currentUserUsername = localStorage.getItem("username") || "Username";
+  currentUserAuthor = localStorage.getItem("author") || "Author";
+  console.log(currentUserUsername);
+  console.log(currentUserAuthor);
 
   postContainer = document.getElementById("posts");
   if (postContainer != null) {
@@ -26,6 +30,23 @@ function setupPage() {
   const closePopup = document.getElementById("closePopup");
   const postPopup = document.getElementById("postPopup");
   const submitPostButton = document.getElementById("submitPost");
+  const loginButton = document.getElementById("loginButton") as HTMLImageElement;
+
+  let loggedIn = true;
+
+  if(loggedIn && loginButton){
+    loginButton.src = "./icon_logout.png";
+  }else{
+    loginButton.src = "./icon_login.png";
+  }
+
+  loginButton?.addEventListener("click", () => {
+    console.log("WELP");
+    if(loggedIn){
+      localStorage.clear();
+    }
+    window.location.href = "/Login";
+  });
 
   openPopupButton?.addEventListener("click", () => {
     if (postTitle) {
@@ -98,6 +119,7 @@ async function postNewComment(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify(newCommentBody),
       });
@@ -169,6 +191,7 @@ async function postNewBlog(title: string, body: string) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      'Authorization': `Bearer ${localStorage.getItem("token")}`
     },
     body: JSON.stringify(newBlogBody),
   });
@@ -478,6 +501,7 @@ async function likePost(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(likePostBody),
     });
@@ -550,6 +574,7 @@ async function likeComment(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(likeCommentBody),
     });

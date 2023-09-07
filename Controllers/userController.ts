@@ -2,6 +2,7 @@ import { createUser, Username } from "./dbControl";
 import Response from '../Tools/Response';
 import { randomize } from '../Tools/Randomize';
 
+
 const ERR = 'There was an issue, please try again later';
 
 export const createUserControl = async (username: string, email: string, author: string, img: string, TMSTAMP: string) => {

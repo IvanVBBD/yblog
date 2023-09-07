@@ -2,6 +2,7 @@
 import express, { Request, Response } from 'express';
 import {postCommentControl, getPostsForAuthors, getLatestFeed, createPostControl, likePostControl, likeCommentControl} from "../Controllers/blogController"
 import bodyParser from "body-parser"
+import { verifyJwtSignature } from "../Controllers/authController";
 const blogRouter = express.Router();
 
 
@@ -14,19 +15,24 @@ const urlencodedParser = bodyParser.urlencoded({
   extended: false 
 });
 
+blogRouter.use(urlencodedParser);
+
 //Outcomes
 const OK = 200;
 const ERR = 500;
 const DENIED = 403;
 const BATCH = 10;
 
-blogRouter.post('/', urlencodedParser, async (req : Request, res: Response) => {
+blogRouter.post('/', verifyJwtSignature , async (req : Request, res: Response) => {
     const { title, username, content, author } = req.body;
     const currentTime = new Date();
   
     try {
       //Response object
+      console.log("we got here");
+      console.log(req.body);
       const createdPost = await createPostControl(author, username, content, title, currentTime);
+      console.log(createdPost.status);
       //can use the data part of the object with the message in order to send the id and the message for the FE component
       if(createdPost.status == OK){
         //can send data back from response object if we need to
@@ -45,7 +51,7 @@ blogRouter.post('/', urlencodedParser, async (req : Request, res: Response) => {
   });
 
   // Add a comment to a post
-blogRouter.post('/comment', urlencodedParser, async (req : Request, res: Response) => {
+blogRouter.post('/comment', verifyJwtSignature , async (req : Request, res: Response) => {
     const { text, author, username, postID } = req.body;
   
     try {
@@ -93,7 +99,7 @@ blogRouter.get('/latest', urlencodedParser, async (req : Request, res: Response)
   }
 });
 
-blogRouter.post('/like', urlencodedParser, async (req : Request, res : Response) =>{
+blogRouter.post('/like', verifyJwtSignature , async (req : Request, res : Response) =>{
     try{
         const {username, postID} = req.body;
         const result = await likePostControl(username,postID);
@@ -104,7 +110,7 @@ blogRouter.post('/like', urlencodedParser, async (req : Request, res : Response)
 
 })
 
-blogRouter.post("/comment/like",urlencodedParser, async (req : Request, res : Response) => {
+blogRouter.post("/comment/like", verifyJwtSignature, async (req : Request, res : Response) => {
     try{
         const {username, commentID} = req.body;
         const result = await likeCommentControl(username,commentID);
@@ -112,7 +118,7 @@ blogRouter.post("/comment/like",urlencodedParser, async (req : Request, res : Re
     }catch(e){
         console.log(e);
         res.status(500).json({ error: 'Error liking user posts' });
-    }
+    } 
 })
 
 export default blogRouter;

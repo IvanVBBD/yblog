@@ -44,7 +44,7 @@ const blogPostSchema = new Schema<IBlogPost>({
   content: {
     type: String,
     required: true,
-    minlength: 10,
+    minlength: 1,
     maxlength: 300,
   },
   author: {
