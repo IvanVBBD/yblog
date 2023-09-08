@@ -211,7 +211,8 @@ async function postNewBlog(title: string, body: string) {
   });
 
   if (blogPostResult.status == 200) {
-    setupPage();
+    //setupPage();
+    location.reload();
   }
 }
 
