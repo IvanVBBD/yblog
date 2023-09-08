@@ -5,8 +5,11 @@ import { randomize } from '../Tools/Randomize';
 
 const ERR = 'There was an issue, please try again later';
 
-export const createUserControl = async (username: string, email: string, author: string, img: string, TMSTAMP: string) => {
+export const createUserControl = async (email: string, author: string, img: string, TMSTAMP: string) => {
   try {
+
+    const username = await UsernameControl(author) || "";
+
     const response = await createUser(username, email, author, img, TMSTAMP);
     return response;
   } catch (error) {

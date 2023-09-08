@@ -41,7 +41,6 @@ export async function verifyJwtSignature(
     next: NextFunction){
     try{
         const token = req.header('Authorization')?.replace('Bearer ', '');
-        console.log(token)
         if(token != undefined){
              if((await verify(token)) === true){
                 next();
