@@ -340,7 +340,7 @@ async function loadBlogs(username: string | null) {
         }
 
         const icon = document.createElement("img");
-        icon.src = "./logo_filled_black.png";
+        icon.src = `/user/picture/${element.username}`;
         icon.classList.add("icon");
         post.appendChild(icon);
 
