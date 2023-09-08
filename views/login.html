@@ -71,9 +71,9 @@
     const responsePayload = decodeJwtResponse(response.credential);
     localStorage.setItem("author", responsePayload.name);
     const res = await authCall({author : responsePayload.name, email:responsePayload.email, image: responsePayload.picture, token: response.credential});
-    console.log(res);
+    
     const username = await res.json();
-    console.log(username);
+    
     localStorage.setItem("username", username);
     if(res.status == 200){
       window.location.href = "/";
