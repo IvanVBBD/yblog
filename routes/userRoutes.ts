@@ -34,14 +34,11 @@ userRouter.post('/authenticate', verifyJwtSignature, async (req: Request, res: R
   
   const TMSTAMP = new Date().toLocaleDateString();
   try {
-
     //empty username will throw error because of length constraints
-    const username = await UsernameControl(author) || "";
-    console.log(username);
-    let user = await createUserControl(username, email, author, img, TMSTAMP);
+    let user = await createUserControl(email, author, img, TMSTAMP);
 
     if (user.status == OK) {
-      res.status(OK).json(username);
+      res.status(OK).json(user.data.username);
     } else if (user.status == ERR) {
       res.status(ERR).json(user);
     } else {

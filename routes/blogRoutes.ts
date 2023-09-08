@@ -29,10 +29,7 @@ blogRouter.post('/', verifyJwtSignature , async (req : Request, res: Response) =
   
     try {
       //Response object
-      console.log("we got here");
-      console.log(req.body);
       const createdPost = await createPostControl(author, username, content, title, currentTime);
-      console.log(createdPost.status);
       //can use the data part of the object with the message in order to send the id and the message for the FE component
       if(createdPost.status == OK){
         //can send data back from response object if we need to
