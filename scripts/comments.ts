@@ -153,7 +153,7 @@ async function postNewComment(
         commentList.appendChild(comment);
 
         const commentIcon = document.createElement("img");
-        commentIcon.src = "./logo_filled_black.png";
+        commentIcon.src = `/user/picture/${currentUserUsername}`;
         commentIcon.classList.add("comment-icon");
         comment.appendChild(commentIcon);
 
@@ -446,7 +446,7 @@ async function loadBlogs(username: string | null) {
               comments.appendChild(comment);
 
               const commentIcon = document.createElement("img");
-              commentIcon.src = "./logo_filled_black.png";
+              commentIcon.src = `/user/picture/${commentElement.username}`;
               commentIcon.classList.add("comment-icon");
               comment.appendChild(commentIcon);
 
